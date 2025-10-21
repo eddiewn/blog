@@ -1,8 +1,13 @@
+import Header from "../Header"
+
 const Contact = () => {
     return(
-        <main>
-            Hello im the about page.
-        </main>
+        <>
+        <Header />
+            <main>
+                Hello im the about page.
+            </main>
+        </>
     )
 }
 

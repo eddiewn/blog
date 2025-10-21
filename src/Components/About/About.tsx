@@ -1,8 +1,13 @@
+import Header from "../Header";
+
 const About = () => {
     return (
-        <main>
-            <h1>Hello im the about</h1>
-        </main>
+        <>
+            <Header />
+            <main>
+                <h1>Hello im the about</h1>
+            </main>
+        </>
     )
 }
 
