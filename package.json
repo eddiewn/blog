@@ -3,19 +3,20 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-"scripts": {
+  "scripts": {
     "dev:server": "nodemon --exec ts-node server.ts",
     "dev:frontend": "vite",
     "dev": "npm-run-all --parallel dev:server dev:frontend",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
-},
+  },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.15",
     "express": "^5.1.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-router": "^7.9.4",
     "tailwindcss": "^4.1.15"
   },
   "devDependencies": {

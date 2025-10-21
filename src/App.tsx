@@ -1,7 +1,15 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router"
+
+import Home from "./Index"
+
 function App() {
   return (
     <>
-        <h1 className="text-3xl font-bold underline">Hello</h1>
+        <Router>
+            <Routes>
+                <Route index element={<Home />}></Route>
+            </Routes>
+        </Router>
     </>
   )
 }
