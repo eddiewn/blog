@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev:server": "nodemon --exec ts-node server.ts",
-    "dev:frontend": "vite",
-    "dev": "npm-run-all --parallel dev:server dev:frontend",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
