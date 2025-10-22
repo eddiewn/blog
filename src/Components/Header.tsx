@@ -12,7 +12,7 @@ const Header = () => {
                     <li onClick={() => {navigate("/")}}>Home</li>
                     <li onClick={() => {navigate("/contact")}}>Contact</li>
                     <li onClick={() => {navigate("/about")}}>About</li>
-                    <li onClick={() => {}}>Account</li>
+                    <li onClick={() => {navigate("/auth")}}>Account</li>
                 </ul>
             </nav>
         </header>
