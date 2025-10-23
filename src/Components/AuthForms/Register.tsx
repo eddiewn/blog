@@ -16,6 +16,7 @@ const Register = () => {
                 const URL = "http://localhost:4000/api/register";
                 const response = await fetch(URL, {
                     method: "POST",
+                    credentials: "include",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({
                         username: username,

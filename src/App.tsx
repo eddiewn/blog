@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router"
+import { UserProvider } from "./context/userContext"
 
 import Home from "./Components/Index/Index"
 import About from "./Components/About/About"
@@ -7,7 +8,7 @@ import Auth from "./Components/AuthForms/Auth"
 
 function App() {
   return (
-    <>
+    <UserProvider>
         <Router>
             <Routes>
                 <Route index element={<Home />}></Route>
@@ -16,7 +17,7 @@ function App() {
                 <Route path="/auth/*" element={<Auth />}></Route>
             </Routes>
         </Router>
-    </>
+    </UserProvider>
   )
 }
 
