@@ -67,7 +67,6 @@ app.post("/api/register", (req,res) => {
         if(password !== confirmPassword) throw ("Password is not same")
         if(username.length < 3) throw ("Username is too short")
 
-
         bcrypt.genSalt(saltRounds, function(err, salt) {
             bcrypt.hash(password, salt, function(err, hash) {
                 const query = `INSERT INTO users(username, password_hash, role) VALUES ($1, $2, $3)`
