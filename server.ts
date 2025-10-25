@@ -54,6 +54,23 @@ app.use(session({
 
 app.use(express.json())
 
+app.use("/api/admin/", (req,res, next) => {
+    const user = req.session?.user;
+    if(!user){
+        return res.status(403).json({message: "Not logged in"})
+    }
+
+    if(user.role !== "admin"){
+        return res.status(403).json({message: "Not admin, unauthorized"})
+    }
+
+    next();    
+})
+
+app.get("/api/admin/enter-blog", (req, res) => {
+    res.json({auth: true})
+})
+
 app.get("/api/chungus", (req, res) => {
     res.send("Hello");
 })
