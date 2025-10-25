@@ -2,20 +2,24 @@ import { useEffect, useState, useReducer } from "react";
 import Header from "../Header";
 import { useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"
-import Markdown from "react-markdown";
 
-type Action = { 
-    type: "SET_TITLE"; payload: string 
-};
+type Action = 
+    {type: "SET_TITLE"; payload: string}
+    |
+    {type: "SET_SUMMARY"; payload: string}
 
 type State = { 
-    title: string 
+    title: string,
+    summary: string
 };
 
     const reducer = (state: State, action: Action) => {
         switch (action.type) {
             case "SET_TITLE":
-                return { ...state, title: action.payload };     
+                return { ...state, title: action.payload };    
+            case "SET_SUMMARY":
+                return {...state, summary: action.payload}
+ 
             default:
                 return state;
         }
@@ -28,7 +32,10 @@ const Createblog = () => {
     const [auth, setAuth] = useState<boolean | null>(null)
     const navigate = useNavigate();
     
-    const [state, dispatch] = useReducer(reducer, { title: "" });
+    const [state, dispatch] = useReducer(reducer, { 
+        title: "",
+        summary: "",
+    });
 
     useEffect(() => {
         const adminAuth = async () => {
@@ -60,6 +67,9 @@ const Createblog = () => {
 
     if (!auth) return null;
 
+    const content = `${state.title}\n\n${state.summary
+    }`
+
     return(
         <>        
             <Header />        
@@ -71,13 +81,18 @@ const Createblog = () => {
                     <input type="text" onChange={(e) => {
                         dispatch({type: "SET_TITLE", payload: e.target.value})
                     }}/>
-                    <h1>{state.title}</h1>
+                </section>
+                <section>
+                    <h2>Summary</h2>
+                    <input type="text" onChange={(e) => {
+                        dispatch({type: "SET_SUMMARY", payload: e.target.value})
+                    }}/>
                 </section>
             </div>
             <div>
                 <h2>Preview</h2>
                 <ReactMarkdown>
-                    {state.title}
+                    {content}
                 </ReactMarkdown>
             </div>
             </main>
