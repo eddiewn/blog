@@ -1,12 +1,34 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import Header from "../Header";
 import { useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"
+import Markdown from "react-markdown";
+
+type Action = { 
+    type: "SET_TITLE"; payload: string 
+};
+
+type State = { 
+    title: string 
+};
+
+    const reducer = (state: State, action: Action) => {
+        switch (action.type) {
+            case "SET_TITLE":
+                return { ...state, title: action.payload };     
+            default:
+                return state;
+        }
+    }
 
 const Createblog = () => {
 
+
+    
     const [auth, setAuth] = useState<boolean | null>(null)
     const navigate = useNavigate();
+    
+    const [state, dispatch] = useReducer(reducer, { title: "" });
 
     useEffect(() => {
         const adminAuth = async () => {
@@ -41,33 +63,23 @@ const Createblog = () => {
     return(
         <>        
             <Header />        
-            <main className="w-screen h-screen bg-green-300 flex flex-col gap-5" >
+            <main className="w-screen h-screen bg-green-300 flex gap-5" >
                 <p>Welcome to Create blog page</p>
-            <section>
-                <h2>Title</h2>
+            <div>
+                <section>
+                    <h2>Title</h2>
+                    <input type="text" onChange={(e) => {
+                        dispatch({type: "SET_TITLE", payload: e.target.value})
+                    }}/>
+                    <h1>{state.title}</h1>
+                </section>
+            </div>
+            <div>
+                <h2>Preview</h2>
                 <ReactMarkdown>
-                    First blogpost!
+                    {state.title}
                 </ReactMarkdown>
-            </section>
-
-            <section>
-                <h2>Description</h2>
-                <ReactMarkdown>
-                    ***The description is very good***
-                </ReactMarkdown>
-            </section>
-            <section>
-                <h2>Introduction</h2>
-                <ReactMarkdown>
-                    *I am not introducting myself*
-                </ReactMarkdown>
-            </section>
-            <section>
-                <h2>Main Content</h2>
-                <ReactMarkdown>
-                    **Yada yada yada**
-                </ReactMarkdown>
-            </section>
+            </div>
             </main>
         </>
     )
