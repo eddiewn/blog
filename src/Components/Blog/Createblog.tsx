@@ -32,6 +32,7 @@ type State = {
 
 const Createblog = () => {
     const [auth, setAuth] = useState<boolean | null>(null)
+
     const [tags, setTags] = useState<string[]>([""])
     const [addedTags, setAddedTags] = useState<string[]>([])
 
@@ -153,7 +154,7 @@ const Createblog = () => {
                     <h2>Added Tags</h2>
                     <ul>
                         {addedTags.map((addedTag) => {
-                            return <li>{addedTag}</li>
+                            return <li onClick={() => {}}>{addedTag}</li>
                         })}
                     </ul>
                 </section>

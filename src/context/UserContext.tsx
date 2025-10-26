@@ -7,13 +7,13 @@ type User = {
 } | null;
 
 type UserContextType = {
-  user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+    user: User;
+    setUser: React.Dispatch<React.SetStateAction<User>>;
 };
 
 const UserContext = createContext<UserContextType>({
-  user: null,
-  setUser: () => {},
+    user: null,
+    setUser: () => {},
 });
 
 export default UserContext;
@@ -41,9 +41,9 @@ useEffect(() => {
     getUser();
 },[])
 
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+    return (
+        <UserContext.Provider value={{ user, setUser }}>
+            {children}
+        </UserContext.Provider>
+    );
 };
