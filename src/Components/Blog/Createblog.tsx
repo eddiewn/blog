@@ -35,6 +35,7 @@ const Createblog = () => {
 
     
     const [auth, setAuth] = useState<boolean | null>(null)
+    const [tags, setTags] = useState<string[]>([""])
     const navigate = useNavigate();
     
     const [state, dispatch] = useReducer(reducer, { 
@@ -68,6 +69,25 @@ const Createblog = () => {
 
         adminAuth();
     },[navigate])
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            const URL = "http://localhost:4000/api/get-tags" 
+            try {
+                const response = await fetch(URL);
+                const data = await response.json();
+                const tagsArray = [];
+                for (let index = 0; index < data.rowCount; index++) {
+                    tagsArray.push(data.rows[index].name)
+                }
+                setTags(tagsArray);
+                console.log(tagsArray)
+            } catch (error) {
+                console.log("Error:", error)
+            }
+        }
+        fetchTags();
+    },[])
 
     if (auth === null) return <p>Loading...</p>;
 
@@ -104,8 +124,6 @@ const Createblog = () => {
 
                     }}/>
                 </section>
-                
-
                 <section>
                     <h2>Tags</h2>
                     <input type="text" onChange={() => {

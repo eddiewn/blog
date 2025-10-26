@@ -134,6 +134,14 @@ app.post("/api/login", async (req, res) => {
     }
 })
 
+app.get("/api/get-tags", async (req, res) => {
+    const query = `SELECT name FROM tags`
+
+    const tags = await pool.query(query);
+
+    res.json(tags)
+})
+
 app.get("/api/me", (req,res) => {
     try {
         const user = req.session.user;
