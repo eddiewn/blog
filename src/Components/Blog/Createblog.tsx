@@ -6,11 +6,14 @@ import ReactMarkdown from "react-markdown"
 type Action = 
     {type: "SET_TITLE"; payload: string}
     |
-    {type: "SET_SUMMARY"; payload: string}
+    {type: "SET_SUMMARY"; payload: string}    
+    |
+    {type: "SET_MAIN"; payload: string}
 
 type State = { 
     title: string,
-    summary: string
+    summary: string,
+    main: string,
 };
 
     const reducer = (state: State, action: Action) => {
@@ -19,6 +22,8 @@ type State = {
                 return { ...state, title: action.payload };    
             case "SET_SUMMARY":
                 return {...state, summary: action.payload}
+            case "SET_MAIN":
+                return {...state, main: action.payload}
  
             default:
                 return state;
@@ -35,6 +40,7 @@ const Createblog = () => {
     const [state, dispatch] = useReducer(reducer, { 
         title: "",
         summary: "",
+        main: "",
     });
 
     useEffect(() => {
@@ -67,16 +73,14 @@ const Createblog = () => {
 
     if (!auth) return null;
 
-    const content = `${state.title}\n\n${state.summary
-    }`
+    const content = `${state.title}\n\n${state.summary}\n\n${state.main}`
 
     return(
         <>        
             <Header />        
-            <main className="w-screen h-screen bg-green-300 flex gap-5" >
-                <p>Welcome to Create blog page</p>
-            <div>
-                <section>
+            <main className="w-screen h-screen bg-green-300 flex" >
+            <div className="bg-orange-300 w-1/4">
+                <section className="">
                     <h2>Title</h2>
                     <input type="text" onChange={(e) => {
                         dispatch({type: "SET_TITLE", payload: e.target.value})
@@ -88,12 +92,34 @@ const Createblog = () => {
                         dispatch({type: "SET_SUMMARY", payload: e.target.value})
                     }}/>
                 </section>
+                <section>
+                    <h2>Main Content</h2>
+                    <input type="text" onChange={(e) => {
+                        dispatch({type: "SET_MAIN", payload: e.target.value})
+                    }}/>
+                </section>
+                <section className="">
+                    <h2>Cover Image</h2>
+                    <input type="text" onChange={() => {
+
+                    }}/>
+                </section>
+                
+
+                <section>
+                    <h2>Tags</h2>
+                    <input type="text" onChange={() => {
+                        // dispatch({type: "SET_SUMMARY", payload: e.target.value})
+                    }}/>
+                </section>
             </div>
-            <div>
+            <div className="w-3/4 h-full">
                 <h2>Preview</h2>
-                <ReactMarkdown>
-                    {content}
-                </ReactMarkdown>
+                <div className="h-full bg-white mx-5">
+                    <ReactMarkdown>
+                        {content}
+                    </ReactMarkdown>
+                </div>
             </div>
             </main>
         </>
