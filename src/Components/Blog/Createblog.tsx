@@ -31,11 +31,10 @@ type State = {
     }
 
 const Createblog = () => {
-
-
-    
     const [auth, setAuth] = useState<boolean | null>(null)
     const [tags, setTags] = useState<string[]>([""])
+    const [addedTags, setAddedTags] = useState<string[]>([])
+
     const navigate = useNavigate();
     
     const [state, dispatch] = useReducer(reducer, { 
@@ -77,9 +76,11 @@ const Createblog = () => {
                 const response = await fetch(URL);
                 const data = await response.json();
                 const tagsArray = [];
+
                 for (let index = 0; index < data.rowCount; index++) {
                     tagsArray.push(data.rows[index].name)
                 }
+
                 setTags(tagsArray);
                 console.log(tagsArray)
             } catch (error) {
@@ -89,11 +90,22 @@ const Createblog = () => {
         fetchTags();
     },[])
 
+    useEffect(() => {
+        console.log(addedTags)
+    },[addedTags])
+
+    const handleAddTag = (tag: string) => {
+        setAddedTags((prev) => [...prev, tag])
+    }
+
     if (auth === null) return <p>Loading...</p>;
 
     if (!auth) return null;
 
+
     const content = `${state.title}\n\n${state.summary}\n\n${state.main}`
+
+    
 
     return(
         <>        
@@ -127,8 +139,23 @@ const Createblog = () => {
                 <section>
                     <h2>Tags</h2>
                     <input type="text" onChange={() => {
-                        // dispatch({type: "SET_SUMMARY", payload: e.target.value})
+                        
                     }}/>
+                    <ul>
+                        {tags.map((tag) => {
+                            return <li onClick={() => {
+                                handleAddTag(tag);                        
+                            }}>{tag}</li>
+                        })}
+                    </ul>
+                </section>
+                <section>
+                    <h2>Added Tags</h2>
+                    <ul>
+                        {addedTags.map((addedTag) => {
+                            return <li>{addedTag}</li>
+                        })}
+                    </ul>
                 </section>
             </div>
             <div className="w-3/4 h-full">
