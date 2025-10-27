@@ -134,11 +134,37 @@ app.post("/api/login", async (req, res) => {
     }
 })
 
-app.post("/api/admin/create-blog", (req, res) => {
-    try {
+app.post("/api/admin/create-blog", async (req, res) => {
+    try{
+        const title = req.body.title;
+        const summary = req.body.summary;
+        const content = req.body.content;
+        const tags = req.body.tags;
+        const coverImage = req.body.cover_image;
+        console.log(tags)
+
+        const postQuery = `INSERT INTO posts (title, summary, content, cover_image) VALUES($1, $2, $3, $4) RETURNING id`
+        const values = [title, summary, content, coverImage]
+
+        const insertedPost = await pool.query(postQuery, values)
+
+
+        const databaseTags = await pool.query(`SELECT * FROM tags`)
+        const tagQuery = `INSERT INTO post_tags (post_id, tag_id) VALUES($1, $2)`
+
+        for (const databaseTag of databaseTags.rows) {
+            for(const tag of tags){
+                console.log(databaseTag.name)
+                if(databaseTag.name !== tag) continue
+
+                const tagValues = [insertedPost.rows[0].id, databaseTag.id]
+                await pool.query(tagQuery, tagValues)
+            }
+        }
         res.status(200).json({message: "It reached server, take this back yes."})
     } catch (error) {
-        res.status(400).json({error: error})
+        console.log(error)
+        res.status(400).json({error: "Failed to insert blog"})
     }
 })
 

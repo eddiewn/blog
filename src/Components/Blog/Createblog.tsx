@@ -10,13 +10,13 @@ type Action =
     |
     {type: "SET_MAIN"; payload: string}
     |
-    {type: "SET_COVER_IMAGE"; payload: string}
+    {type: "SET_COVER_IMAGE"; payload: File | null}
 
 type State = { 
     title: string,
     summary: string,
     main: string,
-    cover_image: string,
+    cover_image: File | null,
 };
 
     const reducer = (state: State, action: Action) => {
@@ -47,7 +47,7 @@ const Createblog = () => {
         title: "",
         summary: "",
         main: "",
-        cover_image: "",
+        cover_image: null,
     });
 
     useEffect(() => {
@@ -115,6 +115,7 @@ const Createblog = () => {
     };
 
     const handleCreateBlog = async() => {
+        console.log(addedTags)
         try {
             const URL = "http://localhost:4000/api/admin/create-blog"
             const response = await fetch(URL,{
@@ -131,7 +132,7 @@ const Createblog = () => {
             })
             const data = await response.json();
             if(!response.ok) throw data.error
-            
+
             console.log(data.message)
         } catch (error) {
             console.log("Error creating blog:", error)
@@ -182,7 +183,7 @@ const Createblog = () => {
                                 return alert("File is too large")
                             } 
 
-                            dispatch({type: "SET_COVER_IMAGE", payload: e.target.value})
+                            dispatch({type: "SET_COVER_IMAGE", payload: file})
 
                         }
                     }}/>
