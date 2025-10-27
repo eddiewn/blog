@@ -9,11 +9,14 @@ type Action =
     {type: "SET_SUMMARY"; payload: string}    
     |
     {type: "SET_MAIN"; payload: string}
+    |
+    {type: "SET_COVER_IMAGE"; payload: string}
 
 type State = { 
     title: string,
     summary: string,
     main: string,
+    cover_image: string,
 };
 
     const reducer = (state: State, action: Action) => {
@@ -21,9 +24,11 @@ type State = {
             case "SET_TITLE":
                 return { ...state, title: action.payload };    
             case "SET_SUMMARY":
-                return {...state, summary: action.payload}
+                return {...state, summary: action.payload};
             case "SET_MAIN":
-                return {...state, main: action.payload}
+                return {...state, main: action.payload};
+            case "SET_COVER_IMAGE":
+                return {...state, cover_image: action.payload};
  
             default:
                 return state;
@@ -42,6 +47,7 @@ const Createblog = () => {
         title: "",
         summary: "",
         main: "",
+        cover_image: "",
     });
 
     useEffect(() => {
@@ -95,6 +101,10 @@ const Createblog = () => {
         console.log(addedTags)
     },[addedTags])
 
+    useEffect(() => {
+        console.log(state)
+    },[state])
+
     const handleAddTag = (tag: string) => {
         if(addedTags.some((arrayTag) => arrayTag === tag)) return;
         setAddedTags((prev) => [...prev, tag])
@@ -112,7 +122,7 @@ const Createblog = () => {
 
     const content = `${state.title}\n\n${state.summary}\n\n${state.main}`
 
-    
+
 
     return(
         <>        
@@ -139,8 +149,24 @@ const Createblog = () => {
                 </section>
                 <section className="">
                     <h2>Cover Image</h2>
-                    <input type="text" onChange={() => {
+                    <input type="file"  accept="image/*" onChange={(e) => {
+                        if(e.target.files !== null){
+                            const file = e.target.files[0];
 
+                            if(!file.type.startsWith('image/')){
+                                e.target.value = "";
+                                return alert ("Only images");
+                            }
+
+                            if(file.size > 5 * 1024 * 1024){
+                                e.target.value = "";
+                                console.log("File size:", file.size)  
+                                return alert("File is too large")
+                            } 
+
+                            dispatch({type: "SET_COVER_IMAGE", payload: e.target.value})
+
+                        }
                     }}/>
                 </section>
                 <section>
