@@ -134,6 +134,14 @@ app.post("/api/login", async (req, res) => {
     }
 })
 
+app.post("/api/admin/create-blog", (req, res) => {
+    try {
+        res.status(200).json({message: "It reached server, take this back yes."})
+    } catch (error) {
+        res.status(400).json({error: error})
+    }
+})
+
 app.get("/api/get-tags", async (req, res) => {
     const query = `SELECT name FROM tags`
 

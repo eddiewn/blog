@@ -113,17 +113,35 @@ const Createblog = () => {
     const handleRemoveTag = (addedTag: string) => {
         setAddedTags((prev) => prev.filter((tag) => tag !== addedTag));
     };
+
+    const handleCreateBlog = async() => {
+        try {
+            const URL = "http://localhost:4000/api/admin/create-blog"
+            const response = await fetch(URL,{
+                method: "POST",
+                credentials: "include",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    title: state.title,
+                    summary: state.summary,
+                    content: state.main,
+                    tags: addedTags,
+                    cover_image: state.cover_image,
+                })
+            })
+            const data = await response.json();
+            if(!response.ok) throw data.error
+            
+            console.log(data.message)
+        } catch (error) {
+            console.log("Error creating blog:", error)
+        }
+    }
     
 
     if (auth === null) return <p>Loading...</p>;
-
     if (!auth) return null;
-
-
     const content = `${state.title}\n\n${state.summary}\n\n${state.main}`
-
-
-
     return(
         <>        
             <Header />        
@@ -192,6 +210,9 @@ const Createblog = () => {
                         })}
                     </ul>
                 </section>
+                <button onClick={() => {
+                    handleCreateBlog();
+                }}>Create Blog</button>
             </div>
             <div className="w-3/4 h-full">
                 <h2>Preview</h2>

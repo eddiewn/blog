@@ -1,9 +1,9 @@
-import { createContext, useState, useEffect, type ReactNode } from "react";
+import {createContext, useState, useEffect, type ReactNode} from "react";
 
 type User = {
-  id: number;
-  username: string;
-  role: string;
+    id: number;
+    username: string;
+    role: string;
 } | null;
 
 type UserContextType = {
@@ -18,31 +18,30 @@ const UserContext = createContext<UserContextType>({
 
 export default UserContext;
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User>(null);
+export const UserProvider = ({children}: {children: ReactNode}) => {
+    const [user, setUser] = useState<User>(null);
 
-useEffect(() => {
-    const getUser = async () => {
-        try {
-            const URL = "http://localhost:4000/api/me"
-            const response = await fetch(URL, {
-                  credentials: "include"
-            })
-            const data = await response.json();
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                const URL = "http://localhost:4000/api/me";
+                const response = await fetch(URL, {
+                    credentials: "include",
+                });
+                const data = await response.json();
 
-            if (data.user) {
-                setUser(data.user);
+                if (data.user) {
+                    setUser(data.user);
+                }
+            } catch (error) {
+                console.log("Error getting user:", error);
             }
-
-        } catch (error) {
-            console.log("Error getting user:", error)
-        }
-    }
-    getUser();
-},[])
+        };
+        getUser();
+    }, []);
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{user, setUser}}>
             {children}
         </UserContext.Provider>
     );
