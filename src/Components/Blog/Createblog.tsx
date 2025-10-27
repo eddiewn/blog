@@ -96,8 +96,14 @@ const Createblog = () => {
     },[addedTags])
 
     const handleAddTag = (tag: string) => {
+        if(addedTags.some((arrayTag) => arrayTag === tag)) return;
         setAddedTags((prev) => [...prev, tag])
     }
+
+    const handleRemoveTag = (addedTag: string) => {
+        setAddedTags((prev) => prev.filter((tag) => tag !== addedTag));
+    };
+    
 
     if (auth === null) return <p>Loading...</p>;
 
@@ -154,7 +160,9 @@ const Createblog = () => {
                     <h2>Added Tags</h2>
                     <ul>
                         {addedTags.map((addedTag) => {
-                            return <li onClick={() => {}}>{addedTag}</li>
+                            return <li onClick={() => {
+                                handleRemoveTag(addedTag);
+                            }}>{addedTag}</li>
                         })}
                     </ul>
                 </section>
