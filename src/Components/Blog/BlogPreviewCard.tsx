@@ -1,10 +1,19 @@
 type Props = {
+    id: number;
     title: string;
+    summary: string;
+    cover_image: Blob;
 }
 
-const BlogPreviewCard = ({title}: Props) => {
+const BlogPreviewCard = ({id, title, summary, cover_image}: Props) => {
     return(
-        <h1>{title}</h1>
+        <article>
+            <p>{id}</p>
+            <img src={`${cover_image}`} alt="" />
+            <h1>{title}</h1>
+            <p>{summary}</p>
+            <button>View blog</button>
+        </article>
     )
 }
 

@@ -7,7 +7,10 @@ import BlogPreviewCard from "./BlogPreviewCard";
 const Viewblogs = () => {
 
     type BlogType = {
+        id: number;
         title: string;
+        summary: string;
+        cover_image: Blob;
     }
 
     const [blogs, setBlogs] = useState<BlogType[] | null>(null)
@@ -38,9 +41,9 @@ useEffect(() => {
     return(
         <>
             <Header />
-                <main className="h-200">
+                <main className="">
                     {blogs?.map((blog) => {
-                        return <BlogPreviewCard title={blog.title} />
+                        return <BlogPreviewCard id={blog.id} title={blog.title} summary={blog.summary} cover_image={blog.cover_image}/>
                     })}
                 </main>
             <Footer />
