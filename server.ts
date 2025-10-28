@@ -14,8 +14,6 @@ declare module "express-session" {
     }
 }
 
-
-
 const {Pool} = pg;
 const saltRounds = 10;
 
@@ -171,10 +169,19 @@ app.post("/api/admin/create-blog", async (req, res) => {
 app.get("/api/get-blogs", async(req, res) => {
     try {
         const query = `SELECT * FROM posts`;
-        const blogs = await pool.query(query);
+        const result = await pool.query(query);
+
+        const blogs = result.rows.map(blog => ({
+            ...blog,
+            cover_image: blog.cover_image
+            ? Buffer.from(blog.cover_image).toString("base64")
+            : null,
+        }));
+
+        
 
         res.json({
-            blogs: blogs.rows
+            blogs
         })    
     } catch (error) {
         res.status(500).json({

@@ -41,10 +41,12 @@ useEffect(() => {
     return(
         <>
             <Header />
-                <main className="">
-                    {blogs?.map((blog) => {
-                        return <BlogPreviewCard id={blog.id} title={blog.title} summary={blog.summary} cover_image={blog.cover_image}/>
-                    })}
+                <main className="w-screen">
+                    <div className="m-auto w-4/5 grid grid-cols-2">
+                        {blogs?.map((blog) => {
+                            return <BlogPreviewCard id={blog.id} title={blog.title} summary={blog.summary} cover_image={blog.cover_image}/>
+                        })}
+                    </div>
                 </main>
             <Footer />
         </>
