@@ -168,6 +168,22 @@ app.post("/api/admin/create-blog", async (req, res) => {
     }
 })
 
+app.get("/api/get-blogs", async(req, res) => {
+    console.log("Hello I'm in")
+    try {
+        const query = `SELECT * FROM posts`;
+        const blogs = await pool.query(query);
+
+        res.json({
+            blogs: blogs.rows
+        })    
+    } catch (error) {
+        res.status(500).json({
+        error: error
+        });
+    }
+})
+
 app.get("/api/get-tags", async (req, res) => {
     const query = `SELECT name FROM tags`
 

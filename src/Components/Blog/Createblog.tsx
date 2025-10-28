@@ -184,7 +184,6 @@ const Createblog = () => {
                             } 
 
                             dispatch({type: "SET_COVER_IMAGE", payload: file})
-
                         }
                     }}/>
                 </section>
