@@ -1,7 +1,7 @@
 const Searchbar = () => {
     return(
         <div>
-            <input placeholder="Search..." type="text" />
+            <input className="input-ghost" placeholder="Search..." type="text" />
         </div>
     )
 }
