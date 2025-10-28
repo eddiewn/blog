@@ -194,7 +194,7 @@ const Createblog = () => {
                         
                     }}/>
                     <ul>
-                        {tags.map((tag) => {
+                        {tags.slice(0,5).map((tag) => {
                             return <li onClick={() => {
                                 handleAddTag(tag);                        
                             }}>{tag}</li>

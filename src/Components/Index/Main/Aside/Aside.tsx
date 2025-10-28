@@ -5,7 +5,7 @@ const Aside = () => {
         <aside className="w-full lg:w-1/4 bg-blue-500">
             <Searchbar />
             <p>Im aside.</p>
-            <button>View latest posts</button>
+            <button>View Posts</button>
         </aside>
     )
 }
