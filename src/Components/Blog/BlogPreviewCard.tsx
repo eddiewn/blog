@@ -6,7 +6,7 @@ type Props = {
 }
 
 
-
+// Kappa chungus life ändra databasen till att storea URL och lägg upp bilder någon annastans det var fucked att göra med BYTEA och BLOB.
 const BlogPreviewCard = ({id, title, summary, cover_image}: Props) => {
     
     return(
