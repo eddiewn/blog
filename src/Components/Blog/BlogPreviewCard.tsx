@@ -7,6 +7,7 @@ type Props = {
 
 
 // Kappa chungus life ändra databasen till att storea URL och lägg upp bilder någon annastans det var fucked att göra med BYTEA och BLOB.
+// Skopna mig jag vill inte bli av med min streak ajg ska pusha en kommentar
 const BlogPreviewCard = ({id, title, summary, cover_image}: Props) => {
     
     return(
