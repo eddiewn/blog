@@ -10,10 +10,13 @@ const Viewblogs = () => {
         id: number;
         title: string;
         summary: string;
-        cover_image: Blob;
+        cover_image_url: string;
+        
     }
 
     const [blogs, setBlogs] = useState<BlogType[] | null>(null)
+
+    console.log(blogs)
 
         const getBlogs = async() => {
         try {
@@ -44,7 +47,7 @@ useEffect(() => {
                 <main className="w-screen">
                     <div className="m-auto w-4/5 grid grid-cols-2">
                         {blogs?.map((blog) => {
-                            return <BlogPreviewCard id={blog.id} title={blog.title} summary={blog.summary} cover_image={blog.cover_image}/>
+                            return <BlogPreviewCard id={blog.id} title={blog.title} summary={blog.summary} cover_image_url={blog.cover_image_url}/>
                         })}
                     </div>
                 </main>

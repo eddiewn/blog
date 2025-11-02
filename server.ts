@@ -6,8 +6,9 @@ import session from "express-session"
 import multer from "multer";
 import crypto from "crypto";
 
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 import dotenv from "dotenv"
 
 dotenv.config();
@@ -210,8 +211,21 @@ app.get("/api/get-blogs", async(req, res) => {
         const query = `SELECT * FROM posts`;
         const result = await pool.query(query);
 
+        const blogs = result.rows;
+
+        for (const blog of result.rows){
+            const getObjectParams = {
+                Bucket: bucketName,
+                Key: blog.cover_image,
+            }
+            
+            const command = new GetObjectCommand(getObjectParams);
+            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+            blog.cover_image_url = url;
+        }
+
         res.json({
-            result
+            blogs
         })    
     } catch (error) {
         res.status(500).json({
