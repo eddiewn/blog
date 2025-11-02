@@ -118,18 +118,22 @@ const Createblog = () => {
         console.log(addedTags)
         try {
             const URL = "http://localhost:4000/api/admin/create-blog"
+
+            const formData = new FormData();
+            formData.append("title", state.title)
+            formData.append("summary", state.summary)
+            formData.append("content", state.main)
+            formData.append("tags", JSON.stringify(addedTags));
+            if (state.cover_image) {
+                formData.append("cover_image", state.cover_image);
+            }
+
             const response = await fetch(URL,{
                 method: "POST",
                 credentials: "include",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    title: state.title,
-                    summary: state.summary,
-                    content: state.main,
-                    tags: addedTags,
-                    cover_image: state.cover_image,
-                })
+                body: formData,
             })
+            
             const data = await response.json();
             if(!response.ok) throw data.error
 
@@ -168,7 +172,7 @@ const Createblog = () => {
                 </section>
                 <section className="">
                     <h2>Cover Image</h2>
-                    <input type="file"  accept="image/*" onChange={(e) => {
+                    <input type="file" name="image" accept="image/*" onChange={(e) => {
                         if(e.target.files !== null){
                             const file = e.target.files[0];
 

@@ -3,6 +3,7 @@ import pg from "pg"
 import cors from "cors";
 import bcrypt from "bcrypt"
 import session from "express-session"
+import multer from "multer";
 
 declare module "express-session" {
     interface SessionData {
@@ -13,6 +14,10 @@ declare module "express-session" {
         }
     }
 }
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage })
+
 
 const {Pool} = pg;
 const saltRounds = 10;
@@ -132,17 +137,20 @@ app.post("/api/login", async (req, res) => {
     }
 })
 
-app.post("/api/admin/create-blog", async (req, res) => {
+app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res) => {
     try{
         const title = req.body.title;
         const summary = req.body.summary;
         const content = req.body.content;
         const tags = req.body.tags;
-        const coverImage = req.body.cover_image;
+        const image = req.file;
+
+        console.log(image)
+
         console.log(tags)
 
-        const postQuery = `INSERT INTO posts (title, summary, content, cover_image) VALUES($1, $2, $3, $4) RETURNING id`
-        const values = [title, summary, content, coverImage]
+        const postQuery = `INSERT INTO posts (title, summary, content) VALUES($1, $2, $3) RETURNING id`
+        const values = [title, summary, content]
 
         const insertedPost = await pool.query(postQuery, values)
 
@@ -152,7 +160,6 @@ app.post("/api/admin/create-blog", async (req, res) => {
 
         for (const databaseTag of databaseTags.rows) {
             for(const tag of tags){
-                console.log(databaseTag.name)
                 if(databaseTag.name !== tag) continue
 
                 const tagValues = [insertedPost.rows[0].id, databaseTag.id]
@@ -171,17 +178,8 @@ app.get("/api/get-blogs", async(req, res) => {
         const query = `SELECT * FROM posts`;
         const result = await pool.query(query);
 
-        const blogs = result.rows.map(blog => ({
-            ...blog,
-            cover_image: blog.cover_image
-            ? Buffer.from(blog.cover_image).toString("base64")
-            : null,
-        }));
-
-        
-
         res.json({
-            blogs
+            result
         })    
     } catch (error) {
         res.status(500).json({
