@@ -4,6 +4,8 @@ import cors from "cors";
 import bcrypt from "bcrypt"
 import session from "express-session"
 import multer from "multer";
+import crypto from "crypto";
+
 
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 import dotenv from "dotenv"
@@ -163,9 +165,12 @@ app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res
         const tags = req.body.tags;
         const image = req.file;
 
+        const randomImageName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex");
+
+
         const params = {
             Bucket: bucketName,
-            Key: req.file?.originalname,
+            Key: randomImageName(),
             Body: req.file?.buffer,
             ContentType: req.file?.mimetype,
         }
