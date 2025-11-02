@@ -167,10 +167,10 @@ app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res
 
         const randomImageName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex");
 
-
+        const imageName = randomImageName();
         const params = {
             Bucket: bucketName,
-            Key: randomImageName(),
+            Key: imageName,
             Body: req.file?.buffer,
             ContentType: req.file?.mimetype,
         }
@@ -181,8 +181,8 @@ app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res
 
         console.log(image)
 
-        const postQuery = `INSERT INTO posts (title, summary, content) VALUES($1, $2, $3) RETURNING id`
-        const values = [title, summary, content]
+        const postQuery = `INSERT INTO posts (title, summary, content, cover_image) VALUES($1, $2, $3, $4) RETURNING id`
+        const values = [title, summary, content, imageName]
 
         const insertedPost = await pool.query(postQuery, values)
 
