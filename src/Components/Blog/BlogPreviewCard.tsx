@@ -2,14 +2,13 @@ type Props = {
     id: number;
     title: string;
     summary: string;
-    cover_image: Blob;
+    cover_image: string;
 }
 
 
 // Kappa chungus life ändra databasen till att storea URL och lägg upp bilder någon annastans det var fucked att göra med BYTEA och BLOB.
 // Skopna mig jag vill inte bli av med min streak ajg ska pusha en kommentar
 const BlogPreviewCard = ({id, title, summary, cover_image}: Props) => {
-    
     return(
         <article className="
         flex justify-center gap-2
