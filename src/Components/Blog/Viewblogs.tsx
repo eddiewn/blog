@@ -45,7 +45,7 @@ useEffect(() => {
         <>
             <Header />
                 <main className="w-screen">
-                    <div className="m-auto w-4/5 grid grid-cols-2">
+                    <div className="py-5 m-auto w-9/10 grid grid-cols-1 gap-5">
                         {blogs?.map((blog) => {
                             return <BlogPreviewCard id={blog.id} title={blog.title} summary={blog.summary} cover_image_url={blog.cover_image_url}/>
                         })}
