@@ -7,6 +7,7 @@ import Contact from "./Components/Contact/Contact"
 import Auth from "./Components/AuthForms/Auth"
 import Createblog from "./Components/Blog/Createblog"
 import Viewblogs from "./Components/Blog/Viewblogs"
+import Post from "./Components/Blog/Post"
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
                 <Route path="/auth/*" element={<Auth />}></Route>
                 <Route path="/create-blog" element={<Createblog />}></Route>
                 <Route path="/view-blogs" element={<Viewblogs />}></Route>
+                <Route path="/posts/*" element={<Post />}></Route>
+
             </Routes>
         </Router>
     </UserProvider>

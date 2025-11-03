@@ -234,6 +234,14 @@ app.get("/api/get-blogs", async(req, res) => {
     }
 })
 
+app.get("/posts/:id-:slug", (req, res) => {
+    const postId = req.params.id;
+
+    
+
+    res.send("Chung")
+})
+
 app.get("/api/get-tags", async (req, res) => {
     const query = `SELECT name FROM tags`
 
