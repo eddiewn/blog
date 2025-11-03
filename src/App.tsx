@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { UserProvider } from "./context/UserContext"
 
 import Home from "./Components/Index/Index"
@@ -21,11 +21,10 @@ function App() {
                 <Route path="/create-blog" element={<Createblog />}></Route>
                 <Route path="/view-blogs" element={<Viewblogs />}></Route>
                 <Route path="/posts/*" element={<Post />}></Route>
-
             </Routes>
         </Router>
     </UserProvider>
   )
 }
 
-export default App
+export default App;

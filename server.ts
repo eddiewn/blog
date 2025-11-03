@@ -234,12 +234,22 @@ app.get("/api/get-blogs", async(req, res) => {
     }
 })
 
-app.get("/posts/:id-:slug", (req, res) => {
-    const postId = req.params.id;
+app.get("/posts", async(req, res) => {
+    try {
+        const {id} = req.query;
+        const query = `SELECT * FROM posts WHERE id=${id}`
+        const result = await pool.query(query)
+        
+        if (!result.rowCount) throw new Error("Could not get post from database.")
 
-    
+        const blog = result.rows
 
-    res.send("Chung")
+        res.status(200).json(blog)
+
+    } catch (error) {
+        res.send(error)
+        console.log("Error getting specific post: ", error)
+    }
 })
 
 app.get("/api/get-tags", async (req, res) => {

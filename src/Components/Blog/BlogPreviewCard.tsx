@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router";
+import {useNavigate} from "react-router-dom";
 
 type Props = {
     id: number;
@@ -23,7 +23,7 @@ const BlogPreviewCard = ({id, title, summary, cover_image_url}: Props) => {
     const handlePostClick = () => {
         alert(`Will now take you to POST: ${id}`);
         const slugTitle = slugify(title)
-        navigate(`/posts/${id}-${slugTitle}`);
+        navigate(`/posts?id=${id}&title=${slugTitle}`);
     };
 
     return (
