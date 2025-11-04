@@ -181,9 +181,23 @@ app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res
         await s3.send(command)
 
         console.log(image)
+        // Get blog URL here
 
-        const postQuery = `INSERT INTO posts (title, summary, content, cover_image) VALUES($1, $2, $3, $4) RETURNING id`
-        const values = [title, summary, content, imageName]
+
+            const getObjectParams = {
+                Bucket: bucketName,
+                Key: imageName,
+            }
+            
+            const command2 = new GetObjectCommand(getObjectParams);
+            const url = await getSignedUrl(s3, command2, { expiresIn: 3600 });
+            const cover_image_url = url;
+
+
+
+
+        const postQuery = `INSERT INTO posts (title, summary, content, cover_image, cover_image_url) VALUES($1, $2, $3, $4, $5) RETURNING id`
+        const values = [title, summary, content, imageName, cover_image_url]
 
         const insertedPost = await pool.query(postQuery, values)
 
@@ -213,16 +227,16 @@ app.get("/api/get-blogs", async(req, res) => {
 
         const blogs = result.rows;
 
-        for (const blog of result.rows){
-            const getObjectParams = {
-                Bucket: bucketName,
-                Key: blog.cover_image,
-            }
+        // for (const blog of blogs){
+        //     const getObjectParams = {
+        //         Bucket: bucketName,
+        //         Key: blog.cover_image,
+        //     }
             
-            const command = new GetObjectCommand(getObjectParams);
-            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-            blog.cover_image_url = url;
-        }
+        //     const command = new GetObjectCommand(getObjectParams);
+        //     const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        //     blog.cover_image_url = url;
+        // }
 
         res.json({
             blogs
@@ -236,7 +250,7 @@ app.get("/api/get-blogs", async(req, res) => {
 
 app.get("/posts", async(req, res) => {
     try {
-        const {id} = req.query;
+        const { id } = req.query;
         const query = `SELECT * FROM posts WHERE id=${id}`
         const result = await pool.query(query)
         

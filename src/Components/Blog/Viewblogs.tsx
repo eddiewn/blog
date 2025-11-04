@@ -10,8 +10,7 @@ const Viewblogs = () => {
         id: number;
         title: string;
         summary: string;
-        cover_image_url: string;
-        
+        cover_image_url: string;   
     }
 
     const [blogs, setBlogs] = useState<BlogType[] | null>(null)
