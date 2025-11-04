@@ -8,7 +8,6 @@ const Post = () => {
         title: string,
         summary: string,
         content: string,
-        cover_image: string,
         cover_image_url: string;
         id: number;
     }
