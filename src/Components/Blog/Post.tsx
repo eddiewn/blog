@@ -49,7 +49,7 @@ const Post = () => {
                 <section>
                     <div className="flex items-center gap-5 h-100 text-white">
                         {blog.cover_image_url !== null ? <img className="h-full aspect-square object-cover" src={blog.cover_image_url} alt="" /> : ""}
-                        <div>
+                        <div className="flex flex-col gap-4">
                             <h1 className="text-4xl font-bold">{blog.title}</h1>
                             <p>{blog.summary}</p>
                         </div>
