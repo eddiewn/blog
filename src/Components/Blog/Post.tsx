@@ -26,7 +26,7 @@ const Post = () => {
             const response = await fetch(URL)
 
             const data = await response.json();
-            setBlog(data[0])
+            setBlog(data)
             console.log(data)
         } catch (error) {
             console.log(error)

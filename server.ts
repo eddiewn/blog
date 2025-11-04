@@ -51,6 +51,8 @@ const pool = new Pool({
     port: 5432,
 });
 
+
+
 (async() => {
     console.log(await (await pool.query(`SELECT CURRENT_TIMESTAMP;`)).rows[0])
 })()
@@ -227,16 +229,16 @@ app.get("/api/get-blogs", async(req, res) => {
 
         const blogs = result.rows;
 
-        // for (const blog of blogs){
-        //     const getObjectParams = {
-        //         Bucket: bucketName,
-        //         Key: blog.cover_image,
-        //     }
+        for (const blog of blogs){
+            const getObjectParams = {
+                Bucket: bucketName,
+                Key: blog.cover_image,
+            }
             
-        //     const command = new GetObjectCommand(getObjectParams);
-        //     const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-        //     blog.cover_image_url = url;
-        // }
+            const command = new GetObjectCommand(getObjectParams);
+            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+            blog.cover_image_url = url;
+        }
 
         res.json({
             blogs
@@ -256,7 +258,16 @@ app.get("/posts", async(req, res) => {
         
         if (!result.rowCount) throw new Error("Could not get post from database.")
 
-        const blog = result.rows
+        const blog = result.rows[0]
+
+            const getObjectParams = {
+                Bucket: bucketName,
+                Key: blog.cover_image,
+            }
+            
+            const command = new GetObjectCommand(getObjectParams);
+            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+            blog.cover_image_url = url;
 
         res.status(200).json(blog)
 
