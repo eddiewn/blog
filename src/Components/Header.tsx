@@ -8,7 +8,7 @@ const Header = () => {
     console.log(user)
 
     return(
-        <header className="flex items-center w-screen bg-amber-500 h-20">
+        <header className="flex items-center w-screen h-20 border-b border-gray-500">
             <p className="mr-auto ml-10">Blogname</p>
             <nav className="mr-10">
                 <ul className="flex gap-10">

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 
 import Header from "../Header"
+import Footer from "../Footer"
 
 const Post = () => {
 
@@ -8,7 +9,7 @@ const Post = () => {
         title: string,
         summary: string,
         content: string,
-        cover_image_url: string;
+        cover_image_url: string | null;
         id: number;
     }
     
@@ -43,22 +44,25 @@ const Post = () => {
 
     return(
         <>
-        <Header/>
-        <main className="p-10 flex flex-col gap-10">
-            <section>
-                <div className="flex h-100 bg-white text-black">
-                    <img className="h-full aspect-square object-cover" src={blog.cover_image_url} alt="" />
-                    <div>
-                        <h1>{blog.title}</h1>
-                        <p>{blog.summary}</p>
+            <Header/>
+            <main className="px-100 py-10 flex flex-col gap-10">
+                <section>
+                    <div className="flex items-center gap-5 h-100 text-white">
+                        {blog.cover_image_url !== null ? <img className="h-full aspect-square object-cover" src={blog.cover_image_url} alt="" /> : ""}
+                        <div>
+                            <h1 className="text-4xl font-bold">{blog.title}</h1>
+                            <p>{blog.summary}</p>
+                        </div>
                     </div>
-                </div>
-            </section>
-            <section>
-                {blog.content}
-            </section>
-        </main>
-
+                </section>
+                <section>
+                    {blog.content}
+                </section>
+                <section>
+                    <h2>Comment section</h2>
+                </section>
+            </main>
+            <Footer />
         </>
     )
 }
