@@ -5,7 +5,7 @@ const Contact = () => {
         <>
         <Header />
             <main>
-                Hello im the about page.
+                Hello im the Contact page.
             </main>
         </>
     )
