@@ -32,7 +32,7 @@ useEffect(() => {
             alert(error)
     }
     })()
-},[])
+})
       if (!POTD) return <p>Loading...</p>;
 
     return(
@@ -45,6 +45,4 @@ useEffect(() => {
             </article>
         </>
     )
-    
-
 }
