@@ -36,7 +36,7 @@ const Post = () => {
 
     useEffect(() => {
         getPost();
-    },[])
+    })
 
     if(blog === null) return (<>No blogpost</>)
 

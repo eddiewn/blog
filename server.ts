@@ -165,8 +165,9 @@ app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res
         const title = req.body.title;
         const summary = req.body.summary;
         const content = req.body.content;
-        const tags = req.body.tags;
+        const tags = JSON.parse(req.body.tags);
         const image = req.file;
+        
 
         const randomImageName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex");
 
@@ -184,8 +185,6 @@ app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res
 
         console.log(image)
         // Get blog URL here
-
-
             const getObjectParams = {
                 Bucket: bucketName,
                 Key: imageName,
@@ -202,16 +201,24 @@ app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res
 
 
         const databaseTags = await pool.query(`SELECT * FROM tags`)
-        const tagQuery = `INSERT INTO post_tags (post_id, tag_id) VALUES($1, $2)`
+        const tagQuery = `INSERT INTO post_tags (tag_id, post_id) VALUES($1, $2)`
 
+        // console.log(insertedPost.rows[0])
         for (const databaseTag of databaseTags.rows) {
+
             for(const tag of tags){
+
+                console.log(databaseTag.name, tag)
+
                 if(databaseTag.name !== tag) continue
 
-                const tagValues = [insertedPost.rows[0].id, databaseTag.id]
+
+                const tagValues = [databaseTag.id, insertedPost.rows[0].id]
                 await pool.query(tagQuery, tagValues)
             }
         }
+
+        
         res.status(200).json({message: "It reached server, take this back yes."})
     } catch (error) {
         console.log(error)
