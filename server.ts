@@ -13,16 +13,17 @@ import dotenv from "dotenv"
 
 dotenv.config();
 
-const bucketName = process.env.BUCKET_NAME;
-const bucketRegion = process.env.BUCKET_REGION;
-const accessKey = process.env.ACCESS_KEY;
-const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+const bucketName = process.env.R2_BUCKET_NAME;
+const accountId = process.env.R2_ACCOUNT_ID;
+const accessKey = process.env.R2_ACCESS_KEY_ID;
+const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
 
 const s3 = new S3Client({
-    region: bucketRegion!,
+    region: "auto",
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
     credentials: {
         accessKeyId: accessKey!,
-        secretAccessKey: secretAccessKey!, 
+        secretAccessKey: secretAccessKey!,
     },
 });
 
@@ -37,8 +38,12 @@ declare module "express-session" {
 }
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage })
-
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 2 * 1024 * 1024, // 5 MB
+    },
+});
 
 const {Pool} = pg;
 const saltRounds = 10;
@@ -49,8 +54,6 @@ const pool = new Pool({
         rejectUnauthorized: false,
     },
 });
-
-
 
 
 (async() => {
