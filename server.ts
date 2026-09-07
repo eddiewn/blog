@@ -44,12 +44,12 @@ const {Pool} = pg;
 const saltRounds = 10;
 
 const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "BlogDB",
-    password: "eddiewn13",
-    port: 5432,
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false,
+    },
 });
+
 
 
 
