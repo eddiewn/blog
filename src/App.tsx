@@ -8,11 +8,14 @@ import Auth from "./Components/AuthForms/Auth"
 import Createblog from "./Components/Blog/Createblog"
 import Viewblogs from "./Components/Blog/Viewblogs"
 import Post from "./Components/Blog/Post"
+import Header from "./Components/Header"
+import Footer from "./Components/Footer"
 
 function App() {
   return (
     <UserProvider>
         <Router>
+            <Header/>
             <Routes>
                 <Route index element={<Home />}></Route>
                 <Route path="/about" element={<About />}></Route>
@@ -22,6 +25,7 @@ function App() {
                 <Route path="/view-blogs" element={<Viewblogs />}></Route>
                 <Route path="/posts/*" element={<Post />}></Route>
             </Routes>
+            <Footer/>
         </Router>
     </UserProvider>
   )

@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react"
 
-import Header from "../Header"
-import Footer from "../Footer"
-
 const Post = () => {
 
     type BlogType = {
@@ -44,14 +41,13 @@ const Post = () => {
 
     return(
         <>
-            <Header/>
-            <main className="px-100 py-10 flex flex-col gap-10">
+            <main className="py-10 flex flex-col gap-10">
                 <section>
-                    <div className="flex items-center gap-5 h-100 text-white">
+                    <div className="gap-5 text-white">
                         {blog.cover_image_url !== null ? <img className="h-full aspect-square object-cover" src={blog.cover_image_url} alt="" /> : ""}
                         <div className="flex flex-col gap-4">
-                            <h1 className="text-4xl font-bold">{blog.title}</h1>
-                            <p>{blog.summary}</p>
+                            <h1 className="text-9xl font-bold">{blog.title}</h1>
+                            <p className="text-2xl">{blog.summary}</p>
                         </div>
                     </div>
                 </section>
@@ -62,7 +58,6 @@ const Post = () => {
                     <h2>Comment section</h2>
                 </section>
             </main>
-            <Footer />
         </>
     )
 }

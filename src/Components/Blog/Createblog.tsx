@@ -1,7 +1,9 @@
-import { useEffect, useState, useReducer } from "react";
-import Header from "../Header";
+import { useContext, useEffect, useState, useReducer } from "react";
 import { useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"
+import UserContext from "../../context/UserContext";
+
+
 
 type Action = 
     {type: "SET_TITLE"; payload: string}
@@ -18,6 +20,7 @@ type State = {
     main: string,
     cover_image: File | null,
 };
+
 
     const reducer = (state: State, action: Action) => {
         switch (action.type) {
@@ -36,6 +39,7 @@ type State = {
     }
 
 const Createblog = () => {
+            const { user } = useContext(UserContext);
     const [auth, setAuth] = useState<boolean | null>(null)
 
     const [tags, setTags] = useState<string[]>([""])
@@ -97,6 +101,8 @@ const Createblog = () => {
         fetchTags();
     },[])
 
+
+
     useEffect(() => {
         console.log(addedTags)
     },[addedTags])
@@ -119,11 +125,18 @@ const Createblog = () => {
         try {
             const URL = "http://localhost:4000/api/admin/create-blog"
 
+
+
             const formData = new FormData();
             formData.append("title", state.title)
             formData.append("summary", state.summary)
             formData.append("content", state.main)
             formData.append("tags", JSON.stringify(addedTags));
+
+
+            if(!user) return
+
+            formData.append("author_id", String(user.id))
             if (state.cover_image) {
                 formData.append("cover_image", state.cover_image);
             }
@@ -146,10 +159,10 @@ const Createblog = () => {
 
     if (auth === null) return <p>Loading...</p>;
     if (!auth) return null;
-    const content = `${state.title}\n\n${state.summary}\n\n${state.main}`
+
+
     return(
         <>        
-            <Header />        
             <main className="w-screen h-screen bg-green-300 flex" >
             <div className="bg-orange-300 w-1/4">
                 <section className="">
@@ -218,11 +231,26 @@ const Createblog = () => {
                     handleCreateBlog();
                 }}>Create Blog</button>
             </div>
-            <div className="w-3/4 h-full">
+            <div className="w-5/10 h-full">
                 <h2>Preview</h2>
-                <div className="h-full bg-white mx-5">
+
+                {/* //blogpost review */}
+                <div className="flex flex-col bg-white mx-5 gap-10 text-black">
+                    {state.cover_image && (
+                        <img
+                            src={URL.createObjectURL(state.cover_image)}
+                            alt="Cover"
+                            className="max-h-[500px] w-auto p-20"
+                        />
+                    )}
+                    <section className="flex flex-col items-center gap-10 w-3/5 mx-auto">
+                        <h1 className="text-6xl">{state.title}</h1>
+                        <p className="text-3xl w-4/5">{state.summary}</p>
+                        <div className="w-full bg-gray-200 h-px mb-15"></div>
+                    </section>
+
                     <ReactMarkdown>
-                        {content}
+                        {state.main}
                     </ReactMarkdown>
                 </div>
             </div>

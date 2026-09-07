@@ -170,6 +170,7 @@ app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res
         const content = req.body.content;
         const tags = JSON.parse(req.body.tags);
         const image = req.file;
+        const author_id = req.body.author_id;
         
 
         const randomImageName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex");
@@ -197,8 +198,8 @@ app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res
             const url = await getSignedUrl(s3, command2, { expiresIn: 3600 });
             const cover_image_url = url;
 
-        const postQuery = `INSERT INTO posts (title, summary, content, cover_image, cover_image_url) VALUES($1, $2, $3, $4, $5) RETURNING id`
-        const values = [title, summary, content, imageName, cover_image_url]
+        const postQuery = `INSERT INTO posts (title, summary, content, cover_image, cover_image_url, author_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`
+        const values = [title, summary, content, imageName, cover_image_url, author_id]
 
         const insertedPost = await pool.query(postQuery, values)
 

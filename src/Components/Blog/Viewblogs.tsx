@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import Header from "../Header";
-import Footer from "../Footer";
 import BlogPreviewCard from "./BlogPreviewCard";
 
 const Viewblogs = () => {
@@ -42,7 +40,6 @@ useEffect(() => {
 
     return(
         <>
-            <Header />
                 <main className="w-screen">
                     <div className="py-5 m-auto w-9/10 grid grid-cols-1 gap-5">
                         {blogs?.map((blog) => {
@@ -50,7 +47,6 @@ useEffect(() => {
                         })}
                     </div>
                 </main>
-            <Footer />
         </>
     )
 }

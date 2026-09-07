@@ -1,7 +1,15 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@font-face {
+    font-family: "Europa";
+    src: url("./Assets/fonts/europa-regular-webfont.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
 body{
     margin: 0;
     box-sizing: border-box;
+    font-family: "Europa", sans-serif;
 }
