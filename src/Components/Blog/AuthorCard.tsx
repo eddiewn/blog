@@ -1,5 +1,5 @@
 import profilePlaceholder from "../../Assets/images/blogPostProfilePlaceholder.webp"
-import { useState, useEffect, useEffectEvent } from "react"
+import { useState, useEffect } from "react"
 
 type AuthorCardProps={
     author_id: number | undefined

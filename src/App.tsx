@@ -10,6 +10,7 @@ import Viewblogs from "./Components/Blog/Viewblogs"
 import Post from "./Components/Blog/Post"
 import Header from "./Components/Header/Header"
 import Footer from "./Components/Footer"
+import Profile from "./Components/Profile/Profile"
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/create-blog" element={<Createblog />}></Route>
                 <Route path="/view-blogs" element={<Viewblogs />}></Route>
                 <Route path="/posts/*" element={<Post />}></Route>
+                <Route path="/profile/*" element={<Profile />}></Route>
             </Routes>
             <Footer/>
         </Router>
