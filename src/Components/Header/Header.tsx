@@ -10,10 +10,10 @@ const Header = () => {
 
     return(
         <>
-            <div className="hidden md:block">
+            <div className="z-999 sticky top-0 hidden md:block">
                 <NormalHeader />
             </div>
-            <div className="block md:hidden">
+            <div className="z-999 sticky top-0 block md:hidden">
                 <MobileHeader />
             </div>
         </>
