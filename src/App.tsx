@@ -8,7 +8,7 @@ import Auth from "./Components/AuthForms/Auth"
 import Createblog from "./Components/Blog/Createblog"
 import Viewblogs from "./Components/Blog/Viewblogs"
 import Post from "./Components/Blog/Post"
-import Header from "./Components/Header"
+import Header from "./Components/Header/Header"
 import Footer from "./Components/Footer"
 
 function App() {

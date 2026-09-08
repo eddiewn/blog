@@ -1,13 +1,15 @@
 import { useNavigate } from "react-router";
 import { useContext } from "react";
-import UserContext from "../context/UserContext";
+import UserContext from "../../context/UserContext";
 
-const Header = () => {
+function NormalHeader(){
+
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
     console.log(user)
 
     return(
+        <>
         <header className="flex items-center w-screen h-20 border-b border-gray-500">
             <p className="mr-auto ml-10">Blogname</p>
             <nav className="mr-10">
@@ -25,7 +27,8 @@ const Header = () => {
                 </ul>
             </nav>
         </header>
+        </>
     )
 }
 
-export default Header;
+export default NormalHeader;
