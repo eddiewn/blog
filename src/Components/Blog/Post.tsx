@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react"
+import ReactMarkdown from "react-markdown"
+
+import AuthorCard from "./AuthorCard"
 
 const Post = () => {
 
@@ -8,6 +11,7 @@ const Post = () => {
         content: string,
         cover_image_url: string | null;
         id: number;
+        author_id: number | undefined;
     }
     
     const [blog, setBlog] = useState<BlogType | null>()
@@ -33,7 +37,7 @@ const Post = () => {
 
     useEffect(() => {
         getPost();
-    })
+    },[])
 
     if(blog === null) return (<>No blogpost</>)
 
@@ -42,18 +46,23 @@ const Post = () => {
     return(
         <>
             <main className="py-10 flex flex-col gap-10">
-                <section>
-                    <div className="gap-5 text-white">
-                        {blog.cover_image_url !== null ? <img className="h-full aspect-square object-cover" src={blog.cover_image_url} alt="" /> : ""}
-                        <div className="flex flex-col gap-4">
-                            <h1 className="text-9xl font-bold">{blog.title}</h1>
-                            <p className="text-2xl">{blog.summary}</p>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    {blog.content}
-                </section>
+            <div className="w-full h-full">
+                <div className="flex flex-col bg-white py-20 gap-10 text-black p-5">
+                    <section className="flex flex-col gap-5">
+                        <h1 className="text-4xl font-bold">{blog.title}</h1>
+                        <p className="text-3xl w-4/5">{blog.summary}</p>
+                        <AuthorCard author_id={blog.author_id}/>
+                        <div className="w-full bg-gray-200 h-px my-10"></div>
+                        {blog.cover_image_url !== null ? <img className="w-full mx-auto rounded-2xl" src={blog.cover_image_url} alt="" /> : ""}
+
+                    </section>
+                    <section className="text-lg opacity-80">
+                        <ReactMarkdown >
+                            {blog.content}
+                        </ReactMarkdown>
+                    </section>
+                </div>
+            </div>
             </main>
         </>
     )

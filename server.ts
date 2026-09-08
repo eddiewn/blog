@@ -308,6 +308,20 @@ app.get("/api/me", (req,res) => {
     }
 })
 
+app.get("/api/author", async(req, res) => {
+    try {
+        const author_id = Number(req.query.author_id);
+        console.log(author_id)
+
+        const query = `SELECT id, username, role FROM users WHERE id = $1`;
+        const result = await pool.query(query, [author_id]);
+
+        res.json(result.rows[0])
+    } catch (error) {
+        
+    }
+})
+
 app.listen(PORT, () => {
     console.log(`Listening to port: ${PORT}`)
 })
