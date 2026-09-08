@@ -12,9 +12,12 @@ const Post = () => {
         cover_image_url: string | null;
         id: number;
         author_id: number | undefined;
+        created_at: string;
     }
     
+
     const [blog, setBlog] = useState<BlogType | null>()
+    console.log(blog)
 
     const getId = () => {
         const parameters = new URLSearchParams(window.location.search)
@@ -51,7 +54,7 @@ const Post = () => {
                     <section className="flex flex-col gap-5">
                         <h1 className="text-4xl font-bold">{blog.title}</h1>
                         <p className="text-3xl w-4/5">{blog.summary}</p>
-                        <AuthorCard author_id={blog.author_id}/>
+                        <AuthorCard author_id={blog.author_id} created_at={blog.created_at}/>
                         <div className="w-full bg-gray-200 h-px my-10"></div>
                         {blog.cover_image_url !== null ? <img className="w-full mx-auto rounded-2xl" src={blog.cover_image_url} alt="" /> : ""}
 

@@ -3,6 +3,7 @@ import { useState, useEffect, useEffectEvent } from "react"
 
 type AuthorCardProps={
     author_id: number | undefined
+    created_at: string | undefined
 }
 
 type AuthorProps={
@@ -11,7 +12,7 @@ type AuthorProps={
     role: string;
 }
 
-function AuthorCard({author_id}: AuthorCardProps){
+function AuthorCard({author_id, created_at}: AuthorCardProps){
 
     const [author, setAuthor] = useState<AuthorProps| undefined>(undefined);
 
@@ -49,7 +50,7 @@ function AuthorCard({author_id}: AuthorCardProps){
                 <div className="flex flex-col">
                     <div>
                         <p className="font-bold">{author !== undefined ? author.username : "John Doe"}</p>
-                        <p className="opacity-50">January 1, 2000</p>
+                        <p className="opacity-50">{created_at !== undefined ? new Date(created_at).toLocaleString() : "January 1, 2000"}</p>
                     </div>
                 </div>
             </section>

@@ -241,7 +241,7 @@ const Createblog = () => {
                     <section className="flex flex-col gap-5">
                         <h1 className="text-4xl font-bold">{state.title ? state.title : "Blog Post Title"}</h1>
                         <p className="text-3xl w-4/5">{state.summary}</p>
-                        <AuthorCard author_id={undefined}/>
+                        <AuthorCard author_id={undefined} created_at={undefined}/>
                         <div className="w-full bg-gray-200 h-px my-10"></div>
                         <img
                             src={state.cover_image ? URL.createObjectURL(state.cover_image) : placeHolderBlogImg}
