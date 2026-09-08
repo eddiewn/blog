@@ -54,9 +54,6 @@ const Post = () => {
                 <section>
                     {blog.content}
                 </section>
-                <section>
-                    <h2>Comment section</h2>
-                </section>
             </main>
         </>
     )

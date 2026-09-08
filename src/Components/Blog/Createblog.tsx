@@ -2,8 +2,9 @@ import { useContext, useEffect, useState, useReducer } from "react";
 import { useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"
 import UserContext from "../../context/UserContext";
+import AuthorCard from "./AuthorCard";
 
-
+import placeHolderBlogImg from "../../Assets/images/blogPostImagePlaceholder.jpg"
 
 type Action = 
     {type: "SET_TITLE"; payload: string}
@@ -163,7 +164,7 @@ const Createblog = () => {
 
     return(
         <>        
-            <main className="w-screen h-screen bg-green-300 flex" >
+            <main className="flex flex-col items-center w-screen bg-green-300" >
             <div className="bg-orange-300 w-1/4">
                 <section className="">
                     <h2>Title</h2>
@@ -231,27 +232,28 @@ const Createblog = () => {
                     handleCreateBlog();
                 }}>Create Blog</button>
             </div>
-            <div className="w-5/10 h-full">
+            <div className="w-full h-full">
                 <h2>Preview</h2>
 
                 {/* //blogpost review */}
-                <div className="flex flex-col bg-white mx-5 gap-10 text-black">
-                    {state.cover_image && (
-                        <img
-                            src={URL.createObjectURL(state.cover_image)}
-                            alt="Cover"
-                            className="max-h-[500px] w-auto p-20"
-                        />
-                    )}
-                    <section className="flex flex-col items-center gap-10 w-3/5 mx-auto">
-                        <h1 className="text-6xl">{state.title}</h1>
-                        <p className="text-3xl w-4/5">{state.summary}</p>
-                        <div className="w-full bg-gray-200 h-px mb-15"></div>
-                    </section>
+                <div className="flex flex-col bg-white py-20 gap-10 text-black p-5">
 
-                    <ReactMarkdown>
-                        {state.main}
-                    </ReactMarkdown>
+                    <section className="flex flex-col gap-5">
+                        <h1 className="text-4xl font-bold">{state.title ? state.title : "Blog Post Title"}</h1>
+                        <p className="text-3xl w-4/5">{state.summary}</p>
+                        <AuthorCard />
+                        <div className="w-full bg-gray-200 h-px my-10"></div>
+                        <img
+                            src={state.cover_image ? URL.createObjectURL(state.cover_image) : placeHolderBlogImg}
+                            alt="Cover"
+                            className="w-full mx-auto rounded-2xl"
+                        />
+                    </section>
+                    <section className="text-lg opacity-80">
+                        <ReactMarkdown >
+                            {state.main}
+                        </ReactMarkdown>
+                    </section>
                 </div>
             </div>
             </main>
