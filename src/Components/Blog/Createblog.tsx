@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"
 import UserContext from "../../context/UserContext";
 import AuthorCard from "./AuthorCard";
+import { fetchTags } from "../../api/api";
 
 import placeHolderBlogImg from "../../Assets/images/blogPostImagePlaceholder.jpg"
 
@@ -82,24 +83,15 @@ const Createblog = () => {
     },[navigate])
 
     useEffect(() => {
-        const fetchTags = async () => {
-            const URL = "http://localhost:4000/api/get-tags" 
+        const getTags = async () => {
             try {
-                const response = await fetch(URL);
-                const data = await response.json();
-                const tagsArray = [];
-
-                for (let index = 0; index < data.rowCount; index++) {
-                    tagsArray.push(data.rows[index].name)
-                }
-
-                setTags(tagsArray);
-                console.log(tagsArray)
+                const tags = await fetchTags();
+                setTags(tags);
             } catch (error) {
-                console.log("Error:", error)
+                
             }
         }
-        fetchTags();
+        getTags();
     },[])
 
 

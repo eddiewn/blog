@@ -1,16 +1,19 @@
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useContext } from "react";
 import UserContext from "../../context/UserContext";
 
 function NormalHeader(){
 
+
     const navigate = useNavigate();
+
+
     const { user } = useContext(UserContext);
     console.log(user)
 
     return(
         <>
-        <header className="flex items-center w-screen h-20 border-b border-gray-500 bg-white">
+        <header className={`flex items-center w-screen h-20 font-bold text-white px-30`}>
             <p className="mr-auto ml-10">Blogname</p>
             <nav className="mr-10">
                 <ul className="flex gap-10">
