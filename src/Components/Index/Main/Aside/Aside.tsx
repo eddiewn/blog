@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router";
 
+fetch("api/get-tags")
+
 const Aside = () => {
     
     const navigate = useNavigate();
