@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getBlogs } from "../../api/api";
 
 import BlogPreviewCard from "./BlogPreviewCard";
 
@@ -15,27 +16,19 @@ const Viewblogs = () => {
 
     console.log(blogs)
 
-        const getBlogs = async() => {
-        try {
-            const URL = "http://localhost:4000/api/get-blogs";
-            const response = await fetch(URL);
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            setBlogs(data.blogs)
-
-        } catch (error) {
-            console.log("Error: ", error)
-        }
-    }
 
 
 useEffect(() => {
-    getBlogs();
+    const fetch = async() => {
+        try {
+            const data = await getBlogs();
+            setBlogs(data.blogs);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    fetch();
 },[])
 
     return(

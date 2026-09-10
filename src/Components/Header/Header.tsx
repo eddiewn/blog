@@ -38,6 +38,8 @@ const Header = () => {
             </div>
             <div className="block lg:hidden">
                 <MobileHeader />
+                {!isHome&&(<div className="h-15" />)}
+
             </div>
         </header>
     );
