@@ -29,7 +29,6 @@ export const getBlogs = async () => {
         }
 
         return data;
-        setBlogs(data.blogs);
     } catch (error) {
         console.log("Error: ", error);
     }
