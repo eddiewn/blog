@@ -3,14 +3,8 @@ export const fetchTags = async () => {
     try {
         const response = await fetch(URL);
         const data = await response.json();
-        const tagsArray: string[] = [];
 
-        for (let index = 0; index < data.rowCount; index++) {
-            tagsArray.push(data.rows[index].name);
-        }
-
-        console.log(tagsArray);
-        return tagsArray;
+        return data;
     } catch (error) {
         console.log("Error:", error);
         return [];
@@ -33,3 +27,20 @@ export const getBlogs = async () => {
         console.log("Error: ", error);
     }
 };
+
+export const getPostTags = async () => {
+    try {
+        const URL = "http://localhost:4000/api/get-post-tags"
+                const response = await fetch(URL);
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log(data)
+        return data;
+    } catch (error) {
+        console.log("Error: ", error);
+    }
+}

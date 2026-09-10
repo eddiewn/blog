@@ -286,11 +286,19 @@ app.get("/posts", async(req, res) => {
 })
 
 app.get("/api/get-tags", async (req, res) => {
-    const query = `SELECT name FROM tags`
+    const query = `SELECT * FROM tags`
 
     const tags = await pool.query(query);
 
     res.json(tags)
+})
+
+app.get("/api/get-post-tags", async(req, res) => {
+    const query = `SELECT * FROM post_tags`
+
+    const post_tags = await pool.query(query)
+
+    res.json(post_tags.rows);
 })
 
 app.get("/api/me", (req,res) => {

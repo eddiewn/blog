@@ -2,19 +2,34 @@ import { useNavigate } from "react-router";
 import { useState, useEffect } from "react"
 import { fetchTags } from "../../../../api/api";
 
-const Aside = () => {
+type AsideProps = {
+    setSelectedTagId: (id: number) => void;
+};
+
+type TagObjectProps = {
+    name: string;
+    id: number;
+}
+
+const Aside = ({setSelectedTagId}:AsideProps) => {
 
     const navigate = useNavigate();
 
-    const [firstTen, setFirstTen] = useState<string[]>([])
+    const [firstTen, setFirstTen] = useState<TagObjectProps[]>([])
     const [selectedTag, setSelectedTag] = useState<string>("All")
 
     useEffect(() => {
         const fetch = async () => {
-            const tags = await fetchTags();
-            setFirstTen(tags.slice(1, 6));
+            const data = await fetchTags();
+                const tagsArray: TagObjectProps[] = [];
 
-            console.log(firstTen);
+                for (let index = 0; index < data.rowCount; index++) {
+                    tagsArray.push(data.rows[index]);
+                }
+
+                console.log(tagsArray.slice(0, 6));
+                setFirstTen(tagsArray.slice(0, 6))
+
         };
         fetch();
     },[])
@@ -27,15 +42,19 @@ const Aside = () => {
                 }
                             onClick={() => {
                                 setSelectedTag("All")
+                                setSelectedTagId(0);
                             }}
                 >All</li>
-                {firstTen.map((tag:string) => {
+                {firstTen.map((tagObject:TagObjectProps) => {
+
+                    console.log(tagObject)
                     return (
-                        <li className={`${selectedTag == tag ? "underline decoration-pink-300 underline-offset-10" : ""}`}
+                        <li className={`${selectedTag == tagObject.name ? "underline decoration-pink-300 underline-offset-10" : ""}`}
                             onClick={() => {
-                                setSelectedTag(tag)
+                                setSelectedTag(tagObject.name)
+                                setSelectedTagId(tagObject.id)
                             }}
-                        >{tag}</li>
+                        >{tagObject.name}</li>
                     );
                 })}
             </ul>

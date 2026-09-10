@@ -85,8 +85,15 @@ const Createblog = () => {
     useEffect(() => {
         const getTags = async () => {
             try {
-                const tags = await fetchTags();
-                setTags(tags);
+                const data = await fetchTags();
+                const tagsArray: string[] = [];
+
+                for (let index = 0; index < data.rowCount; index++) {
+                    tagsArray.push(data.rows[index].name);
+                }
+
+                console.log(tagsArray);
+                setTags(tagsArray);
             } catch (error) {
                 
             }
