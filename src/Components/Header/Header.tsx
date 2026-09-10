@@ -2,22 +2,22 @@ import { useContext } from "react";
 import UserContext from "../../context/UserContext";
 
 import NormalHeader from "./NormalHeader";
-import MobileHeader from "./MobileHeader"
+import MobileHeader from "./MobileHeader";
 
 const Header = () => {
     const { user } = useContext(UserContext);
-    console.log(user)
+    console.log(user);
 
-    return(
-        <>
-            <div className="z-999 sticky top-0 hidden md:block">
+    return (
+        <header className="sticky top-0 z-999">
+            <div className="hidden lg:block">
                 <NormalHeader />
             </div>
-            <div className="z-999 sticky top-0 block md:hidden">
+            <div className="block lg:hidden z-999">
                 <MobileHeader />
             </div>
-        </>
-    )
-}
+        </header>
+    );
+};
 
 export default Header;

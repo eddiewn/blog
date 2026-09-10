@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { useNavigate } from "react-router";
 import { useContext } from "react";
@@ -7,19 +7,13 @@ import UserContext from "../../context/UserContext";
 function MobileHeader() {
     const [show, setShow] = useState(false);
 
-    useEffect(() => {
-        if (show == false) {
-        }
-    }, [show]);
-
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
     console.log(user);
 
     return (
         <>
-            <header className="bg-gray-400">
-                <div className="relative flex justify-between h-15">
+                <div className="relative flex justify-between h-15 z-10 bg-white">
                     <p>Blog</p>
                     <div
                         className="relative h-full aspect-square"
@@ -34,7 +28,9 @@ function MobileHeader() {
                     </div>
                 </div>
                 <div
-                    className={`absolute left-0 h-screen w-full bg-white ${show ? "block" : "hidden"}`}>
+                    className={`absolute top-full left-0 h-screen w-full bg-white transition-transform ${
+        show ? "translate-y-0" : "-translate-y-full"
+                        }`}>
                     <nav className="w-9/10 m-auto mt-5">
                         <ul className="flex flex-col text-2xl font-lightbold gap-4">
                             {user?.role === "admin" && (
@@ -74,8 +70,12 @@ function MobileHeader() {
                             <span className="w-full h-px bg-black opacity-20"></span>
                             <li
                                 onClick={() => {
-                                    user ? navigate("/profile") : navigate("/auth")
-                                    setShow(!show)
+                                    if (user) {
+                                        navigate("/profile");
+                                    } else {
+                                        navigate("/auth");
+                                    }
+                                    setShow(!show);
                                 }}
                             >
                                 {user !== null ? `${user.username}` : "Log in"}
@@ -83,7 +83,6 @@ function MobileHeader() {
                         </ul>
                     </nav>
                 </div>
-            </header>
         </>
     );
 }
