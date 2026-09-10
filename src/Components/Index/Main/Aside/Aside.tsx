@@ -6,8 +6,7 @@ const Aside = () => {
     
     const navigate = useNavigate();
     return(
-        <aside className="w-full lg:w-1/4 bg-blue-500">
-
+        <aside id="aside" className="w-full lg:w-1/4 bg-blue-500">
             <p>Im aside.</p>
             <button onClick={() => {
                 navigate("/view-blogs")

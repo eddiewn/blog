@@ -14,3 +14,7 @@ body{
     font-family: "Europa", sans-serif;
     overflow-x: hidden;
 }
+
+html{
+    scroll-behavior: smooth;
+}
