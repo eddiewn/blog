@@ -49,15 +49,13 @@ const Post = () => {
     return(
         <>
             <main className="py-10 flex flex-col gap-10">
-            <div className="w-full h-full">
+            <div className="w-full md:w-4/5 md:m-auto lg:w-3/6 h-full">
                 <div className="flex flex-col bg-white py-20 gap-10 text-black p-5">
                     <section className="flex flex-col gap-5">
                         <h1 className="text-4xl font-bold">{blog.title}</h1>
-                        <p className="text-3xl w-4/5">{blog.summary}</p>
                         <AuthorCard author_id={blog.author_id} created_at={blog.created_at}/>
                         <div className="w-full bg-gray-200 h-px my-10"></div>
                         {blog.cover_image_url !== null ? <img className="w-full mx-auto rounded-2xl" src={blog.cover_image_url} alt="" /> : ""}
-
                     </section>
                     <section className="text-lg opacity-80">
                         <ReactMarkdown >

@@ -13,7 +13,7 @@ const Header = () => {
             <div className="hidden lg:block">
                 <NormalHeader />
             </div>
-            <div className="block lg:hidden z-999">
+            <div className="block lg:hidden">
                 <MobileHeader />
             </div>
         </header>

@@ -10,7 +10,7 @@ function NormalHeader(){
 
     return(
         <>
-        <header className="flex items-center w-screen h-20 border-b border-gray-500">
+        <header className="flex items-center w-screen h-20 border-b border-gray-500 bg-white">
             <p className="mr-auto ml-10">Blogname</p>
             <nav className="mr-10">
                 <ul className="flex gap-10">
