@@ -38,11 +38,13 @@ function MobileHeader() {
                     <nav className="w-9/10 m-auto mt-5">
                         <ul className="flex flex-col text-2xl font-lightbold gap-4">
                             {user?.role === "admin" && (
-                                <li onClick={() => navigate("/create-blog")}>
-                                    Create Post
-                                </li>
+                                <>
+                                    <li onClick={() => navigate("/create-blog")}>
+                                        Create Post
+                                    </li>
+                                    <span className="w-full h-px bg-black opacity-20"></span>
+                                </>
                             )}                           
-                            <span className="w-full h-px bg-black opacity-20"></span>
                             <li
                                 onClick={() => {
                                     navigate("/");
