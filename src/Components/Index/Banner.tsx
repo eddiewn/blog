@@ -17,7 +17,7 @@ const Banner = () => {
                     </p>
 
                 </div>
-                    <a href="#aside" className="h-10 w-10 ">
+                    <a id="aside" href="#aside" className="h-10 w-10 ">
                         <img 
                             src={arrowDown} 
                             alt=""
