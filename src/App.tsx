@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { UserProvider } from "./context/UserContext"
 
-import Home from "./Components/Index/Index"
+import Home from "./Components/Main/Index"
 import About from "./Components/About/About"
 import Contact from "./Components/Contact/Contact"
 import Auth from "./Components/AuthForms/Auth"

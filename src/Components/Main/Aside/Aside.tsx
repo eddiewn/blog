@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react"
-import { fetchTags } from "../../../../api/api";
+import { fetchTags } from "../../../api/api";
 
 type AsideProps = {
     setSelectedTagId: (id: number) => void;

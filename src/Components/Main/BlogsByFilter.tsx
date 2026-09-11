@@ -1,6 +1,6 @@
-import { getBlogs, getPostTags, fetchTags } from "../../../api/api";
+import { getBlogs, getPostTags, fetchTags } from "../../api/api";
 import { useEffect, useState } from "react";
-import BlogPreviewCard from "../../Blog/BlogPreviewCard";
+import BlogPreviewCard from "../Blog/BlogPreviewCard";
 import { useNavigate } from "react-router";
 
 
