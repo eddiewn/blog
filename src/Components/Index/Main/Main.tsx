@@ -11,7 +11,7 @@ const Main = () => {
         <>
             <main className="flex flex-col lg:flex-row w-9/10 m-auto">
                     <Aside setSelectedTagId={setSelectedTagId} />
-                <section className="w-full lg:w-3/4 p-5">
+                <section className="w-full lg:w-3/4 ">
                 <BlogsByFilter selectedTagId={selectedTagId}/>
                 </section>
             </main>

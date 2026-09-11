@@ -5,9 +5,10 @@ type Props = {
     title: string;
     summary: string;
     cover_image_url: string;
+    tags: string[];
 };
 
-const BlogPreviewCard = ({id, title, summary, cover_image_url}: Props) => {
+const BlogPreviewCard = ({id, title, summary, cover_image_url, tags}: Props) => {
     const navigate = useNavigate();
 
     //wtf
@@ -27,24 +28,36 @@ const BlogPreviewCard = ({id, title, summary, cover_image_url}: Props) => {
     };
 
     return (
+        <>
+        <div className="m-auto w-4/5 h-px bg-black opacity-30"></div>
         <article
-            className="w-9/10 flex justify-center gap-2 h-40 bg-white text-black"
+            className="w-10/10 flex flex-col  text-black rounded-xl shadow-md"
             onClick={() => {
                 handlePostClick();
             }}
         >
+
             <img
-                className="h-full mr-auto self-start aspect-square object-cover"
+                className="h-70 m-auto self-start w-full object-cover rounded-t-xl"
                 src={cover_image_url}
                 alt=""
             />
-            <div className="w-full">
-                <h1 className="text-2xl">{title}</h1>
-                <p>
-                    {summary} id: {id}
-                </p>
-            </div>
+                            
+                <div className="flex flex-col gap-5 p-5 text">    
+                    {tags.map((tag) => {
+                        return(<p>{tag}</p>)
+                    }
+                    )}        
+                    <h1 className="text-2xl">{title}</h1>
+                    <p className="text-stone-500">
+                        {summary}
+                    </p>
+                    <button className="w-40">
+                        Read Now
+                    </button>
+                </div>
         </article>
+        </>
     );
 };
 
