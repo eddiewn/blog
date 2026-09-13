@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router";
 import { useState, useEffect } from "react"
 import { fetchTags } from "../../../api/api";
 
@@ -13,7 +12,6 @@ type TagObjectProps = {
 
 const Aside = ({setSelectedTagId}:AsideProps) => {
 
-    const navigate = useNavigate();
 
     const [firstTen, setFirstTen] = useState<TagObjectProps[]>([])
     const [selectedTag, setSelectedTag] = useState<string>("All")
