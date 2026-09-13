@@ -10,7 +10,7 @@ const Banner = () => {
                 <div className="flex flex-col gap-7 text-2xl">
                     <p className="">Thoughts worth sharing. </p>
 
-                    <p>
+                    <p className="w-2/5">
                         From things I'm learning to ideas I'm exploring, this is
                         where I write about what interests me, what I'm working
                         on, and everything I discover along the way.

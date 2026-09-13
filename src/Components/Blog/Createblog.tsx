@@ -136,10 +136,27 @@ const Createblog = () => {
 
             if(!user) return
 
+
+
             formData.append("author_id", String(user.id))
             if (state.cover_image) {
                 formData.append("cover_image", state.cover_image);
             }
+
+            for (const [key, value] of formData.entries()) {
+                if (typeof value === "string" && value.trim() === "") {
+                    return alert(`You are missing ${key}`);
+                }
+            }
+
+            if (addedTags.length === 0) {
+                return alert("You are missing tags");
+            }
+
+            if (!state.cover_image) {
+                return alert("You are missing cover image");
+            }
+
 
             const response = await fetch(URL,{
                 method: "POST",

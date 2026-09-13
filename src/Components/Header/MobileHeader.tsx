@@ -45,11 +45,9 @@ function MobileHeader() {
                                     >
                                         Create Post
                                     </li>
-
                                     <span className="w-full h-px bg-black opacity-20" />
                                 </>
                             )}
-
                             <li
                                 onClick={() => {
                                     navigate("/");
@@ -71,7 +69,6 @@ function MobileHeader() {
                             </li>
 
                             <span className="w-full h-px bg-black opacity-20" />
-
                             <li
                                 onClick={() => {
                                     navigate("/about");
@@ -80,9 +77,7 @@ function MobileHeader() {
                             >
                                 About
                             </li>
-
                             <span className="w-full h-px bg-black opacity-20" />
-
                             <li
                                 onClick={() => {
                                     if (user) {
