@@ -58,7 +58,49 @@ const Post = () => {
                         {blog.cover_image_url !== null ? <img className="w-full mx-auto rounded-2xl" src={blog.cover_image_url} alt="" /> : ""}
                     </section>
                     <section className="text-lg opacity-80">
-                        <ReactMarkdown >
+                        <ReactMarkdown 
+                                                components={{
+                            h1: ({ children }) => (
+                                <h1 className="text-4xl font-bold mt-8 mb-4">
+                                    {children}
+                                </h1>
+                            ),
+                            h2: ({ children }) => (
+                                <h2 className="text-3xl font-bold mt-8 mb-4">
+                                    {children}
+                                </h2>
+                            ),
+                            h3: ({ children }) => (
+                                <h3 className="text-2xl font-bold mt-6 mb-3">
+                                    {children}
+                                </h3>
+                            ),
+                            p: ({ children }) => (
+                                <p className="mb-4">
+                                    {children}
+                                </p>
+                            ),
+                            ul: ({ children }) => (
+                                <ul className="list-disc ml-6 mb-4">
+                                    {children}
+                                </ul>
+                            ),
+                            ol: ({ children }) => (
+                                <ol className="list-decimal ml-6 mb-4">
+                                    {children}
+                                </ol>
+                            ),
+                            li: ({ children }) => (
+                                <li className="mb-1">
+                                    {children}
+                                </li>
+                            ),
+                            pre:({children}) => (
+                                <pre className="bg-gray-300 p-5 w-fit rounded-xl  border-purple-700 border-2">
+                                    {children}
+                                </pre>
+                            )
+                        }}>
                             {blog.content}
                         </ReactMarkdown>
                     </section>

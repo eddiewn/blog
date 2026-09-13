@@ -77,7 +77,7 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
 
     return (
         <>
-            <section className="grid grid-cols-1 gap-10">
+            <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 {blogs.map((blog) => {
                     // console.log("Blog ID " + blog.id);
                     // console.log("Selected Tag ID " + selectedTagId);
@@ -103,7 +103,6 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
                     if (selectedTagId == 0) {
                         return (
                             <>
-                                <div className="m-auto w-4/5 h-px bg-black opacity-30"></div>
                                 <BlogPreviewCard
                                     id={blog.id}
                                     title={blog.title}
@@ -116,7 +115,6 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
                     } else if (hasRelation) {
                         return (
                             <>
-                                <div className="m-auto w-4/5 h-px bg-black opacity-30"></div>
                                 <BlogPreviewCard
                                     id={blog.id}
                                     title={blog.title}
@@ -128,16 +126,15 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
                         );
                     }
                 })}
-
+            </section>
             <button
-                className="bg-blue-400 hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 w-fit"
+                className="bg-blue-400 hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 w-fit mt-10"
                 onClick={() => {
                     navigate("/view-blogs");
                 }}
             >
                 View Latest Posts
             </button>
-            </section>
         </>
     );
 }

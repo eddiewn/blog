@@ -34,9 +34,9 @@ const Aside = ({setSelectedTagId}:AsideProps) => {
 
 
     return (
-        <aside className=" w-full mt-10">
-                <ul className="flex flex-col items-center gap-7 text-3xl font-extrabold opacity-75">
-                    <li className={`${selectedTag == "All" ? "underline decoration-pink-300 underline-offset-10" : ""}`
+        <aside className="w-full lg:w-1/5 mt-10">
+                <ul className="flex flex-col items-center gap-7 text-3xl lg:text-base font-extrabold opacity-75 ">
+                    <li className={`${selectedTag == "All" ? "underline decoration-pink-300 underline-offset-10 hover:cursor-pointer" : "hover:cursor-pointer"}`
                 }
                             onClick={() => {
                                 setSelectedTag("All")
@@ -47,7 +47,7 @@ const Aside = ({setSelectedTagId}:AsideProps) => {
 
                     console.log(tagObject)
                     return (
-                        <li className={`${selectedTag == tagObject.name ? "underline decoration-pink-300 underline-offset-10" : ""}`}
+                        <li className={`${selectedTag == tagObject.name ? "hover:cursor-pointer underline decoration-pink-300 underline-offset-10" : "hover:cursor-pointer"}`}
                             onClick={() => {
                                 setSelectedTag(tagObject.name)
                                 setSelectedTagId(tagObject.id)
