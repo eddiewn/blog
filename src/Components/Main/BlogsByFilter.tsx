@@ -3,15 +3,12 @@ import { useEffect, useState } from "react";
 import BlogPreviewCard from "../Blog/BlogPreviewCard";
 import { useNavigate } from "react-router";
 
-
 type BlogsByFilterProps = {
     selectedTagId: number;
 };
 
 function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
-
     const navigate = useNavigate();
-
 
     type BlogType = {
         id: number;
@@ -29,7 +26,7 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
     type TagType = {
         id: number;
         name: string;
-    }
+    };
 
     const [blogs, setBlogs] = useState<BlogType[] | null>(null);
     const [postTags, setPostTags] = useState<PostTagType[]>([]);
@@ -49,18 +46,16 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
     }, []);
 
     useEffect(() => {
-        const fetch = async() => {
+        const fetch = async () => {
             try {
-                const data = await  fetchTags();
+                const data = await fetchTags();
 
                 // console.log(data.rows)
-                setTags(data.rows)
-            } catch (error) {
-                
-            }
-        }
+                setTags(data.rows);
+            } catch (error) {}
+        };
         fetch();
-    },[])
+    }, []);
 
     useEffect(() => {
         const fetch = async () => {
@@ -82,54 +77,65 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
 
     return (
         <>
-        <section className="grid grid-cols-1 gap-10">
-            {blogs.map((blog) => {
-                // console.log("Blog ID " + blog.id);
-                // console.log("Selected Tag ID " + selectedTagId);
+            <section className="grid grid-cols-1 gap-10">
+                {blogs.map((blog) => {
+                    // console.log("Blog ID " + blog.id);
+                    // console.log("Selected Tag ID " + selectedTagId);
 
+                    const hasRelation = postTags.some(
+                        (postTag) =>
+                            postTag.post_id === blog.id &&
+                            postTag.tag_id === selectedTagId,
+                    );
 
-                const hasRelation = postTags.some((postTag) =>
-                        postTag.post_id === blog.id &&
-                        postTag.tag_id === selectedTagId,
-                );
+                    const tagNames = postTags
+                        .filter((postTag) => postTag.post_id === blog.id)
+                        .map((postTag) => {
+                            const tag = tags.find(
+                                (tag) => tag.id === postTag.tag_id,
+                            );
+                            return tag?.name;
+                        })
+                        .filter((name): name is string => name !== undefined);
 
-const tagNames = postTags
-    .filter((postTag) => postTag.post_id === blog.id)
-    .map((postTag) => {
-        const tag = tags.find((tag) => tag.id === postTag.tag_id);
-        return tag?.name;
-    })
-    .filter((name): name is string => name !== undefined);
+                    // console.log(tagNames)
 
-                // console.log(tagNames)
-
-
-                if (selectedTagId == 0) {
-                    return <BlogPreviewCard
-                        id={blog.id}
-                        title={blog.title}
-                        summary={blog.summary}
-                        cover_image_url={blog.cover_image_url}
-                        tags={tagNames}
-
-                    />;
-                } else if (hasRelation) {
-                    return <BlogPreviewCard
-                        id={blog.id}
-                        title={blog.title}
-                        summary={blog.summary}
-                        cover_image_url={blog.cover_image_url} 
-                        tags={tagNames}
-                    />;                
-                }
-            })}
+                    if (selectedTagId == 0) {
+                        return (
+                            <>
+                                <div className="m-auto w-4/5 h-px bg-black opacity-30"></div>
+                                <BlogPreviewCard
+                                    id={blog.id}
+                                    title={blog.title}
+                                    summary={blog.summary}
+                                    cover_image_url={blog.cover_image_url}
+                                    tags={tagNames}
+                                />
+                            </>
+                        );
+                    } else if (hasRelation) {
+                        return (
+                            <>
+                                <div className="m-auto w-4/5 h-px bg-black opacity-30"></div>
+                                <BlogPreviewCard
+                                    id={blog.id}
+                                    title={blog.title}
+                                    summary={blog.summary}
+                                    cover_image_url={blog.cover_image_url}
+                                    tags={tagNames}                                    
+                                />
+                            </>
+                        );
+                    }
+                })}
 
             <button
+                className="bg-blue-400 hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 w-fit"
                 onClick={() => {
                     navigate("/view-blogs");
                 }}
             >
-                View All Posts
+                View Latest Posts
             </button>
             </section>
         </>

@@ -58,13 +58,13 @@ const Aside = ({setSelectedTagId}:AsideProps) => {
                     );
                 })}
             </ul>
-            <button
+            {/* <button
                 onClick={() => {
                     navigate("/view-blogs");
                 }}
             >
                 View Posts
-            </button>
+            </button> */}
         </aside>
     );
 };

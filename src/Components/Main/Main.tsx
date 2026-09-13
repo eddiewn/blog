@@ -9,7 +9,7 @@ const Main = () => {
     
     return(
         <>
-            <main className="flex flex-col lg:flex-row w-9/10 m-auto">
+            <main className="flex flex-col gap-10 lg:flex-row w-9/10 m-auto">
                     <Aside setSelectedTagId={setSelectedTagId} />
                 <section className="w-full lg:w-3/4 ">
                 <BlogsByFilter selectedTagId={selectedTagId}/>

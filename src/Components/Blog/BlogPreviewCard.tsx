@@ -9,6 +9,8 @@ type Props = {
 };
 
 const BlogPreviewCard = ({id, title, summary, cover_image_url, tags}: Props) => {
+
+    console.log(tags)
     const navigate = useNavigate();
 
     //wtf
@@ -29,7 +31,6 @@ const BlogPreviewCard = ({id, title, summary, cover_image_url, tags}: Props) => 
 
     return (
         <>
-        <div className="m-auto w-4/5 h-px bg-black opacity-30"></div>
         <article
             className="w-10/10 flex flex-col  text-black rounded-xl shadow-md"
             onClick={() => {
@@ -45,16 +46,13 @@ const BlogPreviewCard = ({id, title, summary, cover_image_url, tags}: Props) => 
                             
                 <div className="flex flex-col gap-5 p-5 text">    
                     {tags.map((tag) => {
-                        return(<p>{tag}</p>)
+                        return(<p className="bg-blue-400 rounded p-2 uppercase font-bold w-fit text-white">{tag}</p>)
                     }
                     )}        
                     <h1 className="text-2xl">{title}</h1>
                     <p className="text-stone-500">
                         {summary}
                     </p>
-                    <button className="w-40">
-                        Read Now
-                    </button>
                 </div>
         </article>
         </>
