@@ -41,7 +41,7 @@ const Login = () => {
     return (
         <main className="flex flex-col-reverse lg:flex-row-reverse h-screen">
             <section className="w-3/4 flex flex-col m-auto items-center gap-10">
-                <h1 className="text-1xl font-bold">Login</h1>
+                <h1 className="text-1xl font-bold">Sign in</h1>
                 <form
                     className="w-full lg:w-1/3 flex flex-col gap-5"
                     onSubmit={loginHandler}

@@ -26,7 +26,7 @@ const BlogPreviewCard = ({id, title, summary, cover_image_url, tags, author_id}:
     }
 
     const handlePostClick = () => {
-        alert(`Will now take you to POST: ${id}`);
+        // alert(`Will now take you to POST: ${id}`);
         const slugTitle = slugify(title)
         navigate(`/posts?id=${id}&title=${slugTitle}`);
     };
