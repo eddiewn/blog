@@ -1,15 +1,19 @@
 import express from "express";
-import pg from "pg"
+import pg from "pg";
 import cors from "cors";
-import bcrypt from "bcrypt"
-import session from "express-session"
+import bcrypt from "bcrypt";
+import session from "express-session";
 import multer from "multer";
 import crypto from "crypto";
 
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+    S3Client,
+    GetObjectCommand,
+    PutObjectCommand,
+} from "@aws-sdk/client-s3";
 
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -17,6 +21,8 @@ const bucketName = process.env.R2_BUCKET_NAME;
 const accountId = process.env.R2_ACCOUNT_ID;
 const accessKey = process.env.R2_ACCESS_KEY_ID;
 const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+
+const resendKey = process.env.RESEND_API;
 
 const s3 = new S3Client({
     region: "auto",
@@ -33,7 +39,7 @@ declare module "express-session" {
             id: number;
             username: string;
             role: string;
-        }
+        };
     }
 }
 
@@ -45,7 +51,7 @@ const upload = multer({
     },
 });
 
-const {Pool} = pg;
+const { Pool } = pg;
 const saltRounds = 10;
 
 const pool = new Pool({
@@ -55,281 +61,322 @@ const pool = new Pool({
     },
 });
 
-
-(async() => {
-    console.log(await (await pool.query(`SELECT CURRENT_TIMESTAMP;`)).rows[0])
-})()
+(async () => {
+    console.log(await (await pool.query(`SELECT CURRENT_TIMESTAMP;`)).rows[0]);
+})();
 
 const app = express();
 const PORT = 4000;
 
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-}))
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    }),
+);
 
-app.use(session({
-    secret: 'chungus!',
-    resave: false,
-    saveUninitialized: false,
-    
-    cookie: { 
-        //ONly for temporary HTTP site
-        secure: false,
-        maxAge: 1000 * 60 * 60,
-        sameSite: "lax",
-    }
-}))
+app.use(
+    session({
+        secret: "chungus!",
+        resave: false,
+        saveUninitialized: false,
 
-app.use(express.json())
+        cookie: {
+            //ONly for temporary HTTP site
+            secure: false,
+            maxAge: 1000 * 60 * 60,
+            sameSite: "lax",
+        },
+    }),
+);
 
-app.use("/api/admin/", (req,res, next) => {
+app.use(express.json());
+
+import { Resend } from "resend";
+
+const resend = new Resend(resendKey);
+
+
+
+
+app.use("/api/admin/", (req, res, next) => {
     const user = req.session?.user;
-    if(!user){
-        return res.status(403).json({message: "Not logged in"})
+    if (!user) {
+        return res.status(403).json({ message: "Not logged in" });
     }
 
-    if(user.role !== "admin"){
-        return res.status(403).json({message: "Not admin, unauthorized"})
+    if (user.role !== "admin") {
+        return res.status(403).json({ message: "Not admin, unauthorized" });
     }
 
-    next();    
-})
+    next();
+});
 
 app.get("/api/admin/enter-blog", (req, res) => {
-    res.json({auth: true})
-})
+    res.json({ auth: true });
+});
 
 app.get("/api/chungus", (req, res) => {
     res.send("Hello");
-})
+});
 
-app.post("/api/register", (req,res) => {
+app.post("/api/register", (req, res) => {
     try {
         const username = req.body.username;
         const password = req.body.password;
         const confirmPassword = req.body.confirmPassword;
 
-        if(password !== confirmPassword) throw ("Password is not same")
-        if(username.length < 3) throw ("Username is too short")
+        if (password !== confirmPassword) throw "Password is not same";
+        if (username.length < 3) throw "Username is too short";
 
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-            bcrypt.hash(password, salt, function(err, hash) {
-                const query = `INSERT INTO users(username, password_hash, role) VALUES ($1, $2, $3)`
-                const values = [username, hash, "user"]
+        bcrypt.genSalt(saltRounds, function (err, salt) {
+            bcrypt.hash(password, salt, function (err, hash) {
+                const query = `INSERT INTO users(username, password_hash, role) VALUES ($1, $2, $3)`;
+                const values = [username, hash, "user"];
 
                 pool.query(query, values);
             });
         });
 
-        res.json({message: "Yes it worked"})
+        res.json({ message: "Yes it worked" });
     } catch (error) {
-        console.log("Error in server register:", error)
-        res.status(400).json({error: `Error regestering user: ${error}`})
+        console.log("Error in server register:", error);
+        res.status(400).json({ error: `Error regestering user: ${error}` });
     }
-})
+});
+
+app.post("/api/send-mail", async (req, res) => {
+    try {
+
+    const { name, email, message } = req.body;
+
+    console.log(name, email, message);
+
+        await resend.emails.send({
+            from: "contact@eddiewiiknilsson.com",
+            to: "wiiknilssoneddie@gmail.com",
+            replyTo: email,
+            subject: `Message from ${name}`,
+            html: `<p>${message}</p>`
+        });
+
+        res.status(200).json({
+            message: "Email sent successfully"
+        });
+    } catch (error) {
+        console.error("RESEND ERROR:", error);
+
+        res.status(500).json({
+            error: "Failed to send email"
+        });
+    }
+});
 
 app.post("/api/login", async (req, res) => {
     try {
-    const username = req.body.username;
-    const password = req.body.password;
+        const username = req.body.username;
+        const password = req.body.password;
 
-    if(username.length < 3) throw ("username too short")
+        if (username.length < 3) throw "username too short";
 
-    const query = `SELECT password_hash FROM users WHERE username = $1`
-    const value = [username]
+        const query = `SELECT password_hash FROM users WHERE username = $1`;
+        const value = [username];
 
-    const hash = (await pool.query(query, value)).rows[0].password_hash;
+        const hash = (await pool.query(query, value)).rows[0].password_hash;
 
-    bcrypt.compare(password, hash, async function(err, result) {
-        if(result){
-            const query = `SELECT * FROM users WHERE username = $1`
-            const user = (await pool.query(query, value)).rows[0];
+        bcrypt.compare(password, hash, async function (err, result) {
+            if (result) {
+                const query = `SELECT * FROM users WHERE username = $1`;
+                const user = (await pool.query(query, value)).rows[0];
 
-            req.session.user = {
-                id: user.id,
-                username: user.username,
-                role: user.role,
+                req.session.user = {
+                    id: user.id,
+                    username: user.username,
+                    role: user.role,
+                };
+
+                res.json({ valid: true, user: req.session.user });
+            } else {
+                res.status(400).json({ error: "Not valid login" });
             }
-
-            res.json({valid: true, user: req.session.user})
-        }else{
-            res.status(400).json({error: "Not valid login"})
-        }
-    });
-
+        });
     } catch (error) {
-        res.status(400).json({error: error})
+        res.status(400).json({ error: error });
     }
-})
+});
 
-app.post("/api/admin/create-blog", upload.single("cover_image"), async (req, res) => {
-    try{
-        const title = req.body.title;
-        const summary = req.body.summary;
-        const content = req.body.content;
-        const tags = JSON.parse(req.body.tags);
-        const image = req.file;
-        const author_id = req.body.author_id;
-        
+app.post(
+    "/api/admin/create-blog",
+    upload.single("cover_image"),
+    async (req, res) => {
+        try {
+            const title = req.body.title;
+            const summary = req.body.summary;
+            const content = req.body.content;
+            const tags = JSON.parse(req.body.tags);
+            const image = req.file;
+            const author_id = req.body.author_id;
 
-        const randomImageName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex");
+            const randomImageName = (bytes = 16) =>
+                crypto.randomBytes(bytes).toString("hex");
 
-        const imageName = randomImageName();
-        const params = {
-            Bucket: bucketName,
-            Key: imageName,
-            Body: req.file?.buffer,
-            ContentType: req.file?.mimetype,
-        }
+            const imageName = randomImageName();
+            const params = {
+                Bucket: bucketName,
+                Key: imageName,
+                Body: req.file?.buffer,
+                ContentType: req.file?.mimetype,
+            };
 
-        const command = new PutObjectCommand(params)
+            const command = new PutObjectCommand(params);
 
-        await s3.send(command)
+            await s3.send(command);
 
-        console.log(image)
-        // Get blog URL here
+            console.log(image);
+            // Get blog URL here
             const getObjectParams = {
                 Bucket: bucketName,
                 Key: imageName,
-            }
-            
+            };
+
             const command2 = new GetObjectCommand(getObjectParams);
             const url = await getSignedUrl(s3, command2, { expiresIn: 3600 });
             const cover_image_url = url;
 
-        const postQuery = `INSERT INTO posts (title, summary, content, cover_image, cover_image_url, author_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`
-        const values = [title, summary, content, imageName, cover_image_url, author_id]
+            const postQuery = `INSERT INTO posts (title, summary, content, cover_image, cover_image_url, author_id) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`;
+            const values = [
+                title,
+                summary,
+                content,
+                imageName,
+                cover_image_url,
+                author_id,
+            ];
 
-        const insertedPost = await pool.query(postQuery, values)
+            const insertedPost = await pool.query(postQuery, values);
 
+            const databaseTags = await pool.query(`SELECT * FROM tags`);
+            const tagQuery = `INSERT INTO post_tags (tag_id, post_id) VALUES($1, $2)`;
 
-        const databaseTags = await pool.query(`SELECT * FROM tags`)
-        const tagQuery = `INSERT INTO post_tags (tag_id, post_id) VALUES($1, $2)`
+            // console.log(insertedPost.rows[0])
+            for (const databaseTag of databaseTags.rows) {
+                for (const tag of tags) {
+                    console.log(databaseTag.name, tag);
 
-        // console.log(insertedPost.rows[0])
-        for (const databaseTag of databaseTags.rows) {
+                    if (databaseTag.name !== tag) continue;
 
-            for(const tag of tags){
-
-                console.log(databaseTag.name, tag)
-
-                if(databaseTag.name !== tag) continue
-
-
-                const tagValues = [databaseTag.id, insertedPost.rows[0].id]
-                await pool.query(tagQuery, tagValues)
+                    const tagValues = [databaseTag.id, insertedPost.rows[0].id];
+                    await pool.query(tagQuery, tagValues);
+                }
             }
+
+            res.status(200).json({
+                message: "It reached server, take this back yes.",
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({ error: "Failed to insert blog" });
         }
+    },
+);
 
-        
-        res.status(200).json({message: "It reached server, take this back yes."})
-    } catch (error) {
-        console.log(error)
-        res.status(400).json({error: "Failed to insert blog"})
-    }
-})
-
-app.get("/api/get-blogs", async(req, res) => {
+app.get("/api/get-blogs", async (req, res) => {
     try {
         const query = `SELECT * FROM posts`;
         const result = await pool.query(query);
 
         const blogs = result.rows;
 
-        for (const blog of blogs){
+        for (const blog of blogs) {
             const getObjectParams = {
                 Bucket: bucketName,
                 Key: blog.cover_image,
-            }
-            
+            };
+
             const command = new GetObjectCommand(getObjectParams);
             const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
             blog.cover_image_url = url;
         }
 
         res.json({
-            blogs
-        })    
+            blogs,
+        });
     } catch (error) {
         res.status(500).json({
-        error: error
+            error: error,
         });
     }
-})
+});
 
-app.get("/posts", async(req, res) => {
+app.get("/posts", async (req, res) => {
     try {
         const { id } = req.query;
-        const query = `SELECT * FROM posts WHERE id=${id}`
-        const result = await pool.query(query)
-        
-        if (!result.rowCount) throw new Error("Could not get post from database.")
+        const query = `SELECT * FROM posts WHERE id=${id}`;
+        const result = await pool.query(query);
 
-        const blog = result.rows[0]
+        if (!result.rowCount)
+            throw new Error("Could not get post from database.");
 
-            const getObjectParams = {
-                Bucket: bucketName,
-                Key: blog.cover_image,
-            }
-            
-            const command = new GetObjectCommand(getObjectParams);
-            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-            blog.cover_image_url = url;
+        const blog = result.rows[0];
 
-        res.status(200).json(blog)
+        const getObjectParams = {
+            Bucket: bucketName,
+            Key: blog.cover_image,
+        };
 
+        const command = new GetObjectCommand(getObjectParams);
+        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        blog.cover_image_url = url;
+
+        res.status(200).json(blog);
     } catch (error) {
-        res.send(error)
-        console.log("Error getting specific post: ", error)
+        res.send(error);
+        console.log("Error getting specific post: ", error);
     }
-})
+});
 
 app.get("/api/get-tags", async (req, res) => {
-    const query = `SELECT * FROM tags`
+    const query = `SELECT * FROM tags`;
 
     const tags = await pool.query(query);
 
-    res.json(tags)
-})
+    res.json(tags);
+});
 
-app.get("/api/get-post-tags", async(req, res) => {
-    const query = `SELECT * FROM post_tags`
+app.get("/api/get-post-tags", async (req, res) => {
+    const query = `SELECT * FROM post_tags`;
 
-    const post_tags = await pool.query(query)
+    const post_tags = await pool.query(query);
 
     res.json(post_tags.rows);
-})
+});
 
-app.get("/api/me", (req,res) => {
+app.get("/api/me", (req, res) => {
     try {
         const user = req.session.user;
-        if(!user){
-            res.json({error: "No user logged in"})
-        }else{
-            console.log(user)
-            res.json({user})
+        if (!user) {
+            res.json({ error: "No user logged in" });
+        } else {
+            console.log(user);
+            res.json({ user });
         }
-
     } catch (error) {
-        console.log("Error:", error)
+        console.log("Error:", error);
     }
-})
+});
 
-app.get("/api/author", async(req, res) => {
+app.get("/api/author", async (req, res) => {
     try {
         const author_id = Number(req.query.author_id);
-        console.log(author_id)
+        console.log(author_id);
 
         const query = `SELECT id, username, role FROM users WHERE id = $1`;
         const result = await pool.query(query, [author_id]);
 
-        res.json(result.rows[0])
-    } catch (error) {
-        
-    }
-})
+        res.json(result.rows[0]);
+    } catch (error) {}
+});
 
 app.listen(PORT, () => {
-    console.log(`Listening to port: ${PORT}`)
-})
+    console.log(`Listening to port: ${PORT}`);
+});

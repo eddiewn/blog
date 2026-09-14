@@ -11,6 +11,35 @@ export const fetchTags = async () => {
     }
 };
 
+type sendMailProps = {
+    name: string;
+    email: string;
+    message: string;
+}
+export const sendMail = async ({name, email, message}: sendMailProps) => {
+
+    console.log(name, email, message)
+    try {
+        const URL = "http://localhost:4000/api/send-mail"
+        const response = await fetch(URL, {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name, email: email, message: message,
+            })
+        })
+        
+        const data = await response.json();
+
+        console.log(data)
+
+    } catch (error) {
+        console.log("Error sending mail, ", error)
+    }
+}
+
 export const getBlogs = async () => {
     try {
         const URL = "http://localhost:4000/api/get-blogs";

@@ -1,9 +1,21 @@
+import { sendMail } from "../../api/api";
+import { useState } from "react";
 const Contact = () => {
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
+
     return (
         <>
             <main className="w-4/5 m-auto">
                 <div className="flex flex-col lg:flex-row justify-around lg:gap-0 gap-10">
-                    <form className="w-full max-w-xl p-6 md:p-8 rounded-xl">
+                    <form
+                        className="w-full max-w-xl p-6 md:p-8 rounded-xl"
+                        onSubmit={async(e) => {
+                            e.preventDefault();
+                            await sendMail({ name, email, message });
+                        }}
+                    >
                         <h2 className="text-2xl font-bold  mb-6">
                             Get in touch
                         </h2>
@@ -19,7 +31,10 @@ const Contact = () => {
                                 id="name"
                                 name="name"
                                 placeholder="Your name"
-                                className="w-full border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 outline-none focus:border-blue-500 transition-colors"
+                                className="w-full border border-gray-700 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-blue-500 transition-colors"
+                                onChange={(e) => {
+                                    setName(e.target.value);
+                                }}
                             />
                         </div>
                         <div className="mb-5">
@@ -34,7 +49,10 @@ const Contact = () => {
                                 id="email"
                                 name="email"
                                 placeholder="you@example.com"
-                                className="w-full border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 outline-none focus:border-blue-500 transition-colors"
+                                className="w-full border border-gray-700 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-blue-500 transition-colors"
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                }}
                             />
                         </div>
                         <div className="mb-6">
@@ -50,6 +68,9 @@ const Contact = () => {
                                 rows={6}
                                 placeholder="Write your message..."
                                 className="w-full border border-gray-700 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-blue-500 transition-colors resize-none"
+                                onChange={(e) => {
+                                    setMessage(e.target.value);
+                                }}
                             />
                         </div>
                         <button
@@ -70,7 +91,12 @@ const Contact = () => {
                         </div>
                         <div className="flex flex-col gap-1">
                             <h3 className="font-bold">Where it all happens</h3>
-                            <p>This is where I write all my posts, right here in Malmö, Sweden. It's where I spend my time learning, building, and sharing what I discover along the way.</p>
+                            <p>
+                                This is where I write all my posts, right here
+                                in Malmö, Sweden. It's where I spend my time
+                                learning, building, and sharing what I discover
+                                along the way.
+                            </p>
                         </div>
                     </div>
                 </div>
