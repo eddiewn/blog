@@ -97,6 +97,8 @@ function BlogsByFilter(){
                                     summary={blog.summary}
                                     cover_image_url={blog.cover_image_url}
                                     tags={tagNames}
+                                    author_id={undefined}
+
                                 />
                             </>
                         );

@@ -181,7 +181,7 @@ const Createblog = () => {
     return(
         <>        
             <main className="flex flex-col items-center w-screen bg-green-300" >
-            <div className="bg-orange-300 w-1/4">
+            <div className="bg-orange-300 w-full">
                 <section className="">
                     <h2>Title</h2>
                     <input type="text" onChange={(e) => {
@@ -257,7 +257,7 @@ const Createblog = () => {
                 <h2>Preview</h2>
 
                 {/* //blogpost review */}
-                <div className="flex flex-col bg-white py-20 gap-10 text-black p-5">
+                <div className="flex flex-col bg-white py-20 gap-10 text-black p-5 lg:w-2/5 lg:m-auto">
 
                     <section className="flex flex-col gap-5">
                         <h1 className="text-4xl font-bold">{state.title ? state.title : "Blog Post Title"}</h1>

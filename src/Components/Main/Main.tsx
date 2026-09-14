@@ -9,10 +9,10 @@ const Main = () => {
     
     return(
         <>
-            <main className="flex flex-col gap-10 lg:flex-row-reverse w-9/10 m-auto">
+            <main className="flex flex-col gap-10 w-9/10 m-auto">
                 <Aside setSelectedTagId={setSelectedTagId} />
-                <section className="w-full lg:w-3/4 mt-20">
-                <BlogsByFilter selectedTagId={selectedTagId}/>
+                <section className="w-full md:w-4/5 md:m-auto lg:w-3/5 mt-20">
+                    <BlogsByFilter selectedTagId={selectedTagId}/>
                 </section>
             </main>
         </>

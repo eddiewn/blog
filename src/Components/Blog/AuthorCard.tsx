@@ -43,14 +43,14 @@ function AuthorCard({author_id, created_at}: AuthorCardProps){
 
     return(
         <>
-            <section className="flex h-15 gap-2">
+            <section className={`flex ${created_at == undefined ? "h-7" : "h-15"} gap-2`}>
                 <div className="h-full aspect-square">
                     <img className="rounded-full" src={profilePlaceholder} alt="" />
                 </div>
                 <div className="flex flex-col">
                     <div className="my-auto text-1xl">
                         <p className="font-bold">{author !== undefined ? author.username : "John Doe"}</p>
-                        <p className="opacity-50">{created_at !== undefined ? new Date(created_at).toLocaleString() : "January 1, 2000"}</p>
+                        <p className="opacity-50">{created_at !== undefined ? new Date(created_at).toLocaleString() : ""}</p>
                     </div>
                 </div>
             </section>
