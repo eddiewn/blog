@@ -91,7 +91,7 @@ const Contact = () => {
                         </div>
                         <div className="flex flex-col gap-1">
                             <h3 className="font-bold">Where it all happens</h3>
-                            <p>
+                            <p className="lg:w-3/5">
                                 This is where I write all my posts, right here
                                 in Malmö, Sweden. It's where I spend my time
                                 learning, building, and sharing what I discover
