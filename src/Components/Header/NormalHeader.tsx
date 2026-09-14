@@ -25,13 +25,14 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                 <nav className="mr-10">
                     <ul className="flex gap-10">
                         {user?.role === "admin" && (
-                            <li 
-                                                        className={`${
-                                currentPage === "/create-blog"
-                                    ? "relative after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-full after:bg-current"
-                                    : "relative after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full hover:cursor-pointer"
-                            }`}
-                            onClick={() => navigate("/create-blog")}>
+                            <li
+                                className={`${
+                                    currentPage === "/create-blog"
+                                        ? "relative after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-full after:bg-current"
+                                        : "relative after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full hover:cursor-pointer"
+                                }`}
+                                onClick={() => navigate("/create-blog")}
+                            >
                                 Create blog
                             </li>
                         )}

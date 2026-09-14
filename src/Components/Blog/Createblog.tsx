@@ -180,7 +180,7 @@ const Createblog = () => {
 
     return(
         <>        
-            <main className="flex flex-col items-center w-screen bg-green-300" >
+            <main className="flex flex-col items-center w-screen" >
             <div className="bg-orange-300 w-full">
                 <section className="">
                     <h2>Title</h2>
