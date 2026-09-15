@@ -19,7 +19,7 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
     return (
         <>
             <header
-                className={`flex items-center w-screen h-20 text-1xl font-bold ${isHome ? "text-white" : "bg-white text-black"} px-30`}
+                className={`flex items-center shadow w-screen h-20 text-1xl font-bold ${isHome ? "text-white" : "bg-violet-200 text-black"} px-30`}
             >
                 <p className="mr-auto ml-10">Blogname</p>
                 <nav className="mr-10">
