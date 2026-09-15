@@ -81,7 +81,7 @@ function MobileHeader() {
                             <li
                                 onClick={() => {
                                     if (user) {
-                                        navigate("/profile");
+                                        navigate(`/profile/${user.id}`);
                                     } else {
                                         navigate("/auth");
                                     }

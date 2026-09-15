@@ -101,7 +101,7 @@ const Login = () => {
                     </button>
                 </div>
             </section>
-            <section className="flex flex-col gap-5 w-full p-5 lg:w-2/5 bg-violet-100 h-2/5 lg:h-full lg:gap-50 lg:justify-center lg:pl-10">
+            <section className="flex flex-col gap-5 w-full p-5 lg:w-2/5 bg-violet-100 h-2/5 lg:h-full lg:gap-10 lg:justify-center lg:pl-10">
                 <p className="text-7xl">Logo here</p>
                 <div className="text-2xl  opacity-80">
                     <p>Welcome!</p>

@@ -72,7 +72,9 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                         </li>
                         <li
                             onClick={() =>
-                                user ? navigate("/profile") : navigate("/auth")
+                                user ? navigate(`/profile/${user.id}`) : navigate("/auth")
+                                
+
                             }
                             className={`${
                                 currentPage === "/profile"

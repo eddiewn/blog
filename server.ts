@@ -47,7 +47,7 @@ const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 2 * 1024 * 1024, // 5 MB
+        fileSize: 2 * 1024 * 1024, // 2 MB
     },
 });
 
@@ -279,6 +279,16 @@ app.post(
         }
     },
 );
+
+app.post("/api/fetch-user-info", async(req,res) => {
+    const userId = req.body.userId;
+    const userInfo = await pool.query(
+        "SELECT * FROM users WHERE id = $1",
+        [userId]
+    );
+
+    res.send(userInfo.rows[0])
+})
 
 app.get("/api/get-blogs", async (req, res) => {
     try {

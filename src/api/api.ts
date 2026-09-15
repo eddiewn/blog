@@ -11,6 +11,28 @@ export const fetchTags = async () => {
     }
 };
 
+export const fetchUserInfo = async (userId: number) => {
+    const URL = "http://localhost:4000/api/fetch-user-info";
+
+    try {
+        if(!userId) throw new Error("No userId")
+        const response = await fetch(URL, {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userId: userId,
+            })
+        })
+        
+        const data = response.json();
+        return data;
+    } catch (error) {
+        console.log("Error fetching user data, ", error)
+    }
+}
+
 type sendMailProps = {
     name: string;
     email: string;
