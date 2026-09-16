@@ -283,7 +283,7 @@ app.post(
 app.post("/api/fetch-user-info", async(req,res) => {
     const userId = req.body.userId;
     const userInfo = await pool.query(
-        "SELECT * FROM users WHERE id = $1",
+        "SELECT id, username, role, bio, profile_pic_url, display_name FROM users WHERE id = $1",
         [userId]
     );
 
