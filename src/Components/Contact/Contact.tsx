@@ -8,7 +8,7 @@ const Contact = () => {
     return (
         <>
             <main className="w-4/5 m-auto">
-                <div className="flex flex-col lg:flex-row justify-around lg:gap-0 gap-10">
+                <div className="flex flex-col lg:flex-row justify-around lg:gap-0 gap-10 min-h-screen ">
                     <form
                         className="w-full max-w-xl p-6 md:p-8 rounded-xl"
                         onSubmit={async(e) => {

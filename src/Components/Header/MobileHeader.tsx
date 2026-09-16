@@ -4,6 +4,8 @@ import { useNavigate } from "react-router";
 import { useContext } from "react";
 import UserContext from "../../context/UserContext";
 
+import logo from "../../Assets/images/logo.png"
+
 function MobileHeader() {
     const [show, setShow] = useState(false);
 
@@ -15,15 +17,15 @@ function MobileHeader() {
             <div className="fixed top-0 left-0 w-full z-50">
                 {/* HEADER */}
                 <div className="relative flex justify-between h-15 bg-white z-50">
-                    <p>Blog</p>
+                    <img src={logo} alt="" />
 
                     <div
                         className="relative h-full aspect-square"
                         onClick={() => setShow(!show)}
                     >
-                        <span className="burger absolute left-1/2 top-5 h-0.75 w-3/5 -translate-x-1/2 bg-blue-200" />
-                        <span className="burger absolute left-1/2 top-1/2 h-0.75 w-3/5 -translate-x-1/2 -translate-y-1/2 bg-blue-200" />
-                        <span className="burger absolute bottom-5 left-1/2 h-0.75 w-3/5 -translate-x-1/2 bg-blue-200" />
+                        <span className="burger absolute left-1/2 top-5 h-0.75 w-3/5 -translate-x-1/2 bg-violet-300" />
+                        <span className="burger absolute left-1/2 top-1/2 h-0.75 w-3/5 -translate-x-1/2 -translate-y-1/2 bg-violet-300" />
+                        <span className="burger absolute bottom-5 left-1/2 h-0.75 w-3/5 -translate-x-1/2 bg-violet-300" />
                     </div>
                 </div>
 

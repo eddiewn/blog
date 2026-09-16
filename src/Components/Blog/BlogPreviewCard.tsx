@@ -59,8 +59,9 @@ const BlogPreviewCard = ({id, title, summary, cover_image_url, tags, author_id}:
                         {summary}
                     </p>
                 </div>
-                <hr className="m-auto w-4/5 opacity-10 mt-5"/>
-                <div className="text-xs font-extralight p-5">
+                <div className="text-xs font-extralight p-5 relative bottom-5">
+                    <hr className="m-auto w-4/5 opacity-10 mt-5"/>
+
                     <AuthorCard author_id={author_id} created_at={undefined} />
                 </div>
         </article>

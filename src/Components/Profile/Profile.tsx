@@ -49,6 +49,7 @@ const Profile = () => {
     const [blogs, setBlogs] = useState<BlogType[] | null>(null);
     const [postTags, setPostTags] = useState<PostTagType[]>([]);
     const [tags, setTags] = useState<TagType[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetch = async () => {
@@ -89,6 +90,7 @@ const Profile = () => {
     }, []);
 
     if (!userInfo) return <p>Loading...</p>;
+    if(!blogs) return <p>Loading</p>
 
     return (
         <main className="m-auto">
