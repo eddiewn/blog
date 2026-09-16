@@ -13,10 +13,13 @@ body{
     box-sizing: border-box;
     font-family: "Europa", sans-serif;
     overflow-x: hidden;
-    background-color: #FBFAF6
+    background-color: #FBFAF6;
+    z-index: 10,
 }
 
 html{
     scroll-behavior: smooth;
     overflow-x: hidden;
+        z-index: 10,
+
 }

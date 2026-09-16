@@ -90,7 +90,9 @@ const Profile = () => {
     }, []);
 
     if (!userInfo) return <p>Loading...</p>;
-    if(!blogs) return <p>Loading</p>
+    if (!blogs) return <p>Loading</p>;
+
+    console.log(blogs)
 
     return (
         <main className="m-auto">
@@ -110,16 +112,21 @@ const Profile = () => {
                 </div>
             </section>
             <section className="flex flex-col items-center">
-                <h2 className="text-3xl pt-20 pb-10">Posts by {userInfo.username}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-5 w-4/5 lg:w-3/5 pb-20">
-                    {blogs &&
-                        renderBlogs(
-                            blogs,
-                            postTags,
-                            tags,
-                            (blog) => blog.author_id === Number(userId),
-                        )}
-                </div>
+                {blogs && (
+                    <>
+                        <h2 className="text-3xl pt-20 pb-10">
+                            Posts by {userInfo.username}
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-5 w-4/5 lg:w-3/5 pb-20">
+                            {renderBlogs(
+                                blogs,
+                                postTags,
+                                tags,
+                                (blog) => blog.author_id === Number(userId),
+                            )}
+                        </div>
+                    </>
+                )}
             </section>
         </main>
     );

@@ -8,6 +8,7 @@ import Auth from "./Components/AuthForms/Auth";
 import Createblog from "./Components/Blog/Createblog";
 import Viewblogs from "./Components/Blog/Viewblogs";
 import Post from "./Components/Blog/Post";
+import Settings from "./Components/Settings/Settings"
 
 import Profile from "./Components/Profile/Profile";
 import Layout from "./Components/Layout";
@@ -17,7 +18,6 @@ function App() {
         <UserProvider>
             <Router>
                 <Routes>
-
                     <Route path="/auth/*" element={<Auth />} />
 
                     <Route element={<Layout />}>
@@ -28,8 +28,8 @@ function App() {
                         <Route path="/view-blogs" element={<Viewblogs />} />
                         <Route path="/posts/*" element={<Post />} />
                         <Route path="/profile/*" element={<Profile />} />
+                        <Route path="/settings" element={<Settings />} />
                     </Route>
-
                 </Routes>
             </Router>
         </UserProvider>

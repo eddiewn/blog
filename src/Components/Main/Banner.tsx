@@ -2,7 +2,7 @@ import arrowDown from "../../Assets/images/arrowDown.png"
 
 const Banner = () => {
     return (
-        <section className="w-screen h-screen border-b border-gray-500 bg-linear-135 from-blue-700 to-pink-200 text-white">
+        <section className={`w-screen h-screen  bg-linear-135 from-blue-700 to-pink-200 text-white`}>
             <div className="h-[97%] flex flex-col justify-end gap-20 mx-10 md:ml-30">
                 <h1 className="text-7xl font-extrabold text-white">
                     This is my Blog.

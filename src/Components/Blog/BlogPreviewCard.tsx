@@ -51,7 +51,7 @@ const BlogPreviewCard = ({id, title, summary, cover_image_url, tags, author_id}:
                             
                 <div className="flex flex-col gap-5 p-5 text">    
                     {tags.map((tag) => {
-                        return(<p className="bg-blue-400 rounded p-2 uppercase font-bold w-fit text-white">{tag}</p>)
+                        return(<p className="bg-violet-400 rounded p-2 uppercase font-bold w-fit text-white">{tag}</p>)
                     }
                     )}        
                     <h1 className="text-2xl">{title}</h1>

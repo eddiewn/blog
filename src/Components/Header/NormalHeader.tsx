@@ -25,7 +25,7 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
     return (
         <>
             <header
-                className={`relative flex items-center shadow w-screen h-20 text-1xl font-bold ${isHome ? "text-white" : "bg-violet-200 text-black"} px-30 z-100`}
+                className={`relative flex items-center ${!isHome ? "shadow" : ""} w-screen h-20 text-1xl font-bold ${isHome ? "text-white" : "bg-violet-200 text-black"} px-30 z-100`}
             >
                 <img
                     className="h-4/5 mr-auto ml-10"
@@ -41,13 +41,20 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                                         ? "relative after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-full after:bg-current"
                                         : "relative after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full hover:cursor-pointer"
                                 }`}
-                                onClick={() => navigate("/create-blog")}
+                                onClick={() => {
+                                    navigate("/create-blog");
+
+                                    setUserDropDown(false);
+                                }}
                             >
                                 Create blog
                             </li>
                         )}
                         <li
-                            onClick={() => navigate("/")}
+                            onClick={() => {
+                                navigate("/");
+                                setUserDropDown(false);
+                            }}
                             className={`${
                                 currentPage === "/"
                                     ? "relative after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-full after:bg-current"
@@ -59,6 +66,7 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                         <li
                             onClick={() => {
                                 navigate("/contact");
+                                setUserDropDown(false);
                             }}
                             className={`${
                                 currentPage === "/contact"
@@ -71,6 +79,7 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                         <li
                             onClick={() => {
                                 navigate("/about");
+                                setUserDropDown(false);
                             }}
                             className={`${
                                 currentPage === "/about"
@@ -82,10 +91,9 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                         </li>
                         <li
                             onClick={() => {
-                                // user
-                                //     ? navigate(`/profile/${user.id}`)
-                                //     : navigate("/auth");
-                                setUserDropDown(!userDropDown);
+                                user
+                                    ? setUserDropDown(!userDropDown)
+                                    : navigate("/auth");
                             }}
                             className={`group ${
                                 currentPage.startsWith("/profile")
@@ -99,9 +107,9 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                 </nav>
             </header>
             <ul
-                className={`flex flex-col items-center absolute top-full right-0 transform w-85 bg-[#FBFAF6] gap-1 py-2
+                className={`flex flex-col items-center absolute left-full right-0 transform w-85 bg-[#FBFAF6] gap-1 py-2
                                 transition-transform duration-300
-                                ${userDropDown ? "translate-y-0" : "-translate-y-20"}
+                                ${userDropDown ? "-translate-x-full" : "translate-x-0"}
                                 ${user ? "block" : "hidden"}                            
                                 `}
             >
@@ -109,6 +117,7 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                     onClick={() => {
                         if (!user) return;
                         navigate(`/profile/${user.id}`);
+                        setUserDropDown(false)
                     }}
                 >
                     View Profile
@@ -116,6 +125,7 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                 <li
                     onClick={() => {
                         navigate(`/settings`);
+                        setUserDropDown(false)
                     }}
                 >
                     Edit Profile

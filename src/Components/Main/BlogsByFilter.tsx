@@ -94,7 +94,7 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
                     )}
             </section>
             <button
-                className="bg-blue-400 hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 w-fit mt-10"
+                className="bg-violet-400 hover:bg-violet-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 w-fit mt-10 hover:cursor-pointer"
                 onClick={() => {
                     navigate("/view-blogs");
                 }}

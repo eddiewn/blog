@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import UserContext from "../../context/UserContext";
 
+import logo from "../../Assets/images/logo.png"
+
 const Login = () => {
     const { setUser } = useContext(UserContext);
     const navigate = useNavigate();
@@ -102,7 +104,7 @@ const Login = () => {
                 </div>
             </section>
             <section className="flex flex-col gap-5 w-full p-5 lg:w-2/5 bg-violet-100 h-2/5 lg:h-full lg:gap-10 lg:justify-center lg:pl-10">
-                <p className="text-7xl">Logo here</p>
+                <img className="w-1/2" src={logo} alt="" />
                 <div className="text-2xl  opacity-80">
                     <p>Welcome!</p>
                     <p className="w-4/5">Login to gain access to commenting and making your own posts!</p>
