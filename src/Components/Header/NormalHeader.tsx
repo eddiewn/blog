@@ -116,6 +116,8 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                 <li
                     onClick={() => {
                         if (!user) return;
+                        console.log("This is userId in header: ", user.id)
+
                         navigate(`/profile/${user.id}`);
                         setUserDropDown(false)
                     }}

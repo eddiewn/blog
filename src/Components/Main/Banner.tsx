@@ -5,7 +5,7 @@ const Banner = () => {
         <section className={`w-screen h-screen  bg-linear-135 from-blue-700 to-pink-200 text-white`}>
             <div className="h-[97%] flex flex-col justify-end gap-20 mx-10 md:ml-30">
                 <h1 className="text-7xl font-extrabold text-white">
-                    This is my Blog.
+                    This is my Blog. Yup, just blog.
                 </h1>
                 <div className="flex flex-col gap-7 text-2xl">
                     <p className="">Thoughts worth sharing. </p>

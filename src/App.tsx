@@ -27,7 +27,7 @@ function App() {
                         <Route path="/create-blog" element={<Createblog />} />
                         <Route path="/view-blogs" element={<Viewblogs />} />
                         <Route path="/posts/*" element={<Post />} />
-                        <Route path="/profile/*" element={<Profile />} />
+                        <Route path="/profile/:id" element={<Profile />} />
                         <Route path="/settings" element={<Settings />} />
                     </Route>
                 </Routes>

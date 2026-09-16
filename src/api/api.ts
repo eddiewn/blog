@@ -95,3 +95,19 @@ export const getPostTags = async () => {
         console.log("Error: ", error);
     }
 }
+
+export const updateProfile = async (formData: FormData) => {
+    try {
+        const URL = "http://localhost:4000/api/update-profile"
+        const response = await fetch(URL, {
+            method: "POST",
+            body: formData,
+            
+
+        })
+        const data = response.json();
+        console.log(data)
+    } catch (error) {
+        
+    }
+}

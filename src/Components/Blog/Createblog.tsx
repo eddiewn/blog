@@ -216,7 +216,7 @@ const Createblog = () => {
                                 return alert ("Only images");
                             }
 
-                            if(file.size > 5 * 1024 * 1024){
+                            if(file.size > 2 * 1024 * 1024){
                                 e.target.value = "";
                                 console.log("File size:", file.size)  
                                 return alert("File is too large")

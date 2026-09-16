@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchUserInfo, getBlogs, getPostTags, fetchTags } from "../../api/api";
 import BlogPreviewCard from "../Blog/BlogPreviewCard";
+import { useParams } from "react-router";
+
 
 import blogPostProfilePlaceholder from "../../Assets/images/blogPostProfilePlaceholder.webp";
 import { renderBlogs } from "../../utils/RenderBlogs";
@@ -8,12 +10,15 @@ import { renderBlogs } from "../../utils/RenderBlogs";
 const Profile = () => {
     type userInfo = {
         username: string;
+        display_name : string;
         id: number;
         bio: string;
     };
 
+    const { id } = useParams();
+    const userId = Number(id);
+
     const [userInfo, setUserInfo] = useState<userInfo>();
-    const userId = window.location.pathname.slice(9);
 
     useEffect(() => {
         const fetch = async () => {
@@ -25,7 +30,7 @@ const Profile = () => {
             } catch (error) {}
         };
         fetch();
-    }, []);
+    }, [userId]);
 
     type BlogType = {
         id: number;
@@ -105,7 +110,7 @@ const Profile = () => {
                             alt=""
                         />
                         <div className="flex flex-col gap-2">
-                            <h1 className="text-3xl font-bold">{`${userInfo?.username}`}</h1>
+                            <h1 className="text-3xl font-bold">{`${userInfo.display_name ? userInfo.display_name : userInfo.username}`}</h1>
                             <p className="opacity-65">{`${userInfo.bio ? userInfo.bio : "They dont say much about themself... but we are sure they are a great person."}`}</p>
                         </div>
                     </div>
@@ -115,7 +120,7 @@ const Profile = () => {
                 {blogs && (
                     <>
                         <h2 className="text-3xl pt-20 pb-10">
-                            Posts by {userInfo.username}
+                            Posts by {userInfo.display_name ? userInfo.display_name : userInfo.username}
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-5 w-4/5 lg:w-3/5 pb-20">
                             {renderBlogs(

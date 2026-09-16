@@ -205,10 +205,7 @@ app.post("/api/login", async (req, res) => {
     }
 });
 
-app.post(
-    "/api/admin/create-blog",
-    upload.single("cover_image"),
-    async (req, res) => {
+app.post("/api/admin/create-blog",upload.single("cover_image"),async (req, res) => {
         try {
             const title = req.body.title;
             const summary = req.body.summary;
@@ -279,6 +276,22 @@ app.post(
         }
     },
 );
+
+app.post("/api/update-profile", upload.single("profileImage"), async(req,res) => {
+    const {displayName, bio, id} = req.body;
+    try {
+        const query = `UPDATE users SET display_name = $1, bio = $2 WHERE id = $3`
+        const values = [displayName, bio, id]
+
+        const idk = await pool.query(query, values);
+
+        res.send({message: "Hopefully it succeeded..."});
+
+    } catch (error) {
+        console.log("Error: ", error)
+        res.send(error)
+    }
+});
 
 app.post("/api/fetch-user-info", async(req,res) => {
     const userId = req.body.userId;
