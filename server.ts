@@ -3,6 +3,7 @@ import pg from "pg";
 import cors from "cors";
 import bcrypt from "bcrypt";
 import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
 import multer from "multer";
 import crypto from "crypto";
 
@@ -75,8 +76,15 @@ app.use(
     }),
 );
 
+const PgSession = connectPgSimple(session);
+
 app.use(
     session({
+        store: new PgSession({
+            pool: pool,
+            tableName : 'user_sessions',
+            createTableIfMissing: true,
+        }),
         secret: "chungus!",
         resave: false,
         saveUninitialized: false,
