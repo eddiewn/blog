@@ -96,9 +96,6 @@ import { Resend } from "resend";
 
 const resend = new Resend(resendKey);
 
-
-
-
 app.use("/api/admin/", (req, res, next) => {
     const user = req.session?.user;
     if (!user) {
@@ -147,27 +144,26 @@ app.post("/api/register", (req, res) => {
 
 app.post("/api/send-mail", async (req, res) => {
     try {
+        const { name, email, message } = req.body;
 
-    const { name, email, message } = req.body;
-
-    console.log(name, email, message);
+        console.log(name, email, message);
 
         await resend.emails.send({
             from: "contact@eddiewiiknilsson.com",
             to: "wiiknilssoneddie@gmail.com",
             replyTo: email,
             subject: `Message from ${name}`,
-            html: `<p>${message}</p>`
+            html: `<p>${message}</p>`,
         });
 
         res.status(200).json({
-            message: "Email sent successfully"
+            message: "Email sent successfully",
         });
     } catch (error) {
         console.error("RESEND ERROR:", error);
 
         res.status(500).json({
-            error: "Failed to send email"
+            error: "Failed to send email",
         });
     }
 });
@@ -205,7 +201,10 @@ app.post("/api/login", async (req, res) => {
     }
 });
 
-app.post("/api/admin/create-blog",upload.single("cover_image"),async (req, res) => {
+app.post(
+    "/api/admin/create-blog",
+    upload.single("cover_image"),
+    async (req, res) => {
         try {
             const title = req.body.title;
             const summary = req.body.summary;
@@ -277,31 +276,74 @@ app.post("/api/admin/create-blog",upload.single("cover_image"),async (req, res) 
     },
 );
 
-app.post("/api/update-profile", upload.single("profileImage"), async(req,res) => {
-    const {displayName, bio, id} = req.body;
-    try {
-        const query = `UPDATE users SET display_name = $1, bio = $2 WHERE id = $3`
-        const values = [displayName, bio, id]
+app.post(
+    "/api/update-profile",
+    upload.single("profileImage"),
+    async (req, res) => {
+        const { displayName, bio, id } = req.body;
+        const image = req.file;
 
-        const idk = await pool.query(query, values);
+        let profile_pic_url = null;
+        if (image) {
+            console.log(image);
 
-        res.send({message: "Hopefully it succeeded..."});
+            const randomImageName = (bytes = 16) =>
+                crypto.randomBytes(bytes).toString("hex");
 
-    } catch (error) {
-        console.log("Error: ", error)
-        res.send(error)
-    }
-});
+            const imageName = randomImageName();
+            const params = {
+                Bucket: bucketName,
+                Key: imageName,
+                Body: req.file?.buffer,
+                ContentType: req.file?.mimetype,
+            };
 
-app.post("/api/fetch-user-info", async(req,res) => {
+            const command = new PutObjectCommand(params);
+
+            await s3.send(command);
+
+            console.log(image);
+            // Get blog URL here
+            const getObjectParams = {
+                Bucket: bucketName,
+                Key: imageName,
+            };
+
+            const command2 = new GetObjectCommand(getObjectParams);
+            const url = await getSignedUrl(s3, command2, { expiresIn: 3600 });
+            profile_pic_url = url;
+        }
+
+        let query;
+        let values;
+        try {
+            if (profile_pic_url) {
+                query = `UPDATE users SET display_name = $1, bio = $2, profile_pic_url = $3 WHERE id = $4`;
+                values = [displayName, bio, profile_pic_url, id];
+            } else {
+                query = `UPDATE users SET display_name = $1, bio = $2 WHERE id = $3`;
+                values = [displayName, bio, id];
+            }
+
+            await pool.query(query, values);
+
+            res.send({ message: "Hopefully it succeeded..." });
+        } catch (error) {
+            console.log("Error: ", error);
+            res.send(error);
+        }
+    },
+);
+
+app.post("/api/fetch-user-info", async (req, res) => {
     const userId = req.body.userId;
     const userInfo = await pool.query(
         "SELECT id, username, role, bio, profile_pic_url, display_name FROM users WHERE id = $1",
-        [userId]
+        [userId],
     );
 
-    res.send(userInfo.rows[0])
-})
+    res.send(userInfo.rows[0]);
+});
 
 app.get("/api/get-blogs", async (req, res) => {
     try {
@@ -393,7 +435,7 @@ app.get("/api/author", async (req, res) => {
         const author_id = Number(req.query.author_id);
         console.log(author_id);
 
-        const query = `SELECT id, username, role FROM users WHERE id = $1`;
+        const query = `SELECT id, username, role, display_name FROM users WHERE id = $1`;
         const result = await pool.query(query, [author_id]);
 
         res.json(result.rows[0]);

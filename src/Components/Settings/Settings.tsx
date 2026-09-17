@@ -41,13 +41,16 @@ const Settings = () => {
         if (!user) return;
 
         const fetch = async () => {
-            setUserInfo(await fetchUserInfo(user.id));
+            const info = await fetchUserInfo(user.id);
+
+            setUserInfo(info)
+            setDisplayName(info.display_name || info.username)
         };
 
         fetch();
+
     }, []);
 
-    console.log(userInfo);
 
     if(!userInfo) return;
 
@@ -84,7 +87,9 @@ const Settings = () => {
                             setDisplayName(e.target.value);
                         }}
                         name="updateDisplayName"
-                        className="opacity-40" placeholder={!userInfo.display_name ? userInfo.username : userInfo.display_name} type="text" />
+                        className="opacity-40" type="text"
+                        value={displayName}
+                        />
                     </div>
                     <div>
                         <p className="font-bold">Bio: </p>                
@@ -95,7 +100,7 @@ const Settings = () => {
                             name="updateBio"
                             >
 
-                            {!userInfo.bio ? "They dont say much about themself... but we are sure they are a great person." : "" }
+                            {!userInfo.bio ? "They dont say much about themself... but we are sure they are a great person." : userInfo.bio }
                         </textarea> 
                     </div>
                     <p>This is settings</p>

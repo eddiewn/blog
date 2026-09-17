@@ -10,6 +10,7 @@ type AuthorProps={
     username: string;
     id: number;
     role: string;
+    display_name: string;
 }
 
 function AuthorCard({author_id, created_at}: AuthorCardProps){
@@ -31,7 +32,7 @@ function AuthorCard({author_id, created_at}: AuthorCardProps){
 
                 const data = await response.json();
 
-                console.log(data);
+                console.log("Is this NAN?", data);
                 setAuthor(data);
             } catch (error) {
                 console.log(error);
@@ -49,8 +50,8 @@ function AuthorCard({author_id, created_at}: AuthorCardProps){
                 </div>
                 <div className="flex flex-col">
                     <div className="my-auto text-1xl">
-                        <p className="font-bold">{author !== undefined ? author.username : "John Doe"}</p>
-                        <p className="opacity-50">{created_at !== undefined ? new Date(created_at).toLocaleString() : ""}</p>
+                        <p className="font-bold">{author !== undefined ? (author.display_name ? author.display_name : author.username) : "John Doe"}</p>
+                        <p className="opacity-50">{created_at !== undefined ? new Date(created_at).toLocaleString() : "01-09-24 00:00:00"}</p>
                     </div>
                 </div>
             </section>

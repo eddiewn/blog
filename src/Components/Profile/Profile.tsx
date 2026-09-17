@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { fetchUserInfo, getBlogs, getPostTags, fetchTags } from "../../api/api";
-import BlogPreviewCard from "../Blog/BlogPreviewCard";
 import { useParams } from "react-router";
 
 
@@ -13,6 +12,7 @@ const Profile = () => {
         display_name : string;
         id: number;
         bio: string;
+        profile_pic_url: string;
     };
 
     const { id } = useParams();
@@ -106,12 +106,12 @@ const Profile = () => {
                     <div className="flex flex-col  lg:flex-row justify-center gap-10 h-full">
                         <img
                             className="h-40 w-40 rounded-full aspect-square border-2 border-violet-300 m-auto lg:m-0"
-                            src={blogPostProfilePlaceholder}
+                            src={userInfo.profile_pic_url ? userInfo.profile_pic_url : blogPostProfilePlaceholder}
                             alt=""
                         />
                         <div className="flex flex-col gap-2">
                             <h1 className="text-3xl font-bold">{`${userInfo.display_name ? userInfo.display_name : userInfo.username}`}</h1>
-                            <p className="opacity-65">{`${userInfo.bio ? userInfo.bio : "They dont say much about themself... but we are sure they are a great person."}`}</p>
+                            <p className="opacity-65 break-all">{`${userInfo.bio ? userInfo.bio : "They dont say much about themself... but we are sure they are a great person."}`}</p>
                         </div>
                     </div>
                 </div>
