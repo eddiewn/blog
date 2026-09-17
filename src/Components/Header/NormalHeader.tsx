@@ -94,7 +94,7 @@ function NormalHeader({ isHome, handleLogout }: NormalHeaderProps) {
                 </nav>
             </header>
             <ul
-                className={`flex flex-col items-center absolute left-full right-0 transform w-85 bg-[#FBFAF6] gap-1 py-2
+                className={`flex flex-col items-center absolute left-full right-0 transform w-85 bg-[#FBFAF6] gap-1 py-2 border-l border-b
                                 transition-transform duration-300
                                 ${userDropDown ? "-translate-x-full" : "translate-x-0"}
                                 ${user ? "block" : "hidden"}                            

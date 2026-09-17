@@ -55,7 +55,7 @@ const Post = () => {
                         <h1 className="text-4xl font-bold">{blog.title}</h1>
                         <AuthorCard author_id={blog.author_id} created_at={blog.created_at}/>
                         <div className="w-full bg-gray-200 h-px my-10"></div>
-                        {blog.cover_image_url !== null ? <img className="w-full mx-auto rounded-2xl" src={blog.cover_image_url} alt="" /> : ""}
+                        {blog.cover_image_url !== null ? <img className=" max-h-200 w-auto h-auto object-cover mx-auto rounded-2xl" src={blog.cover_image_url} alt="" /> : ""}
                     </section>
                     <section className="text-lg opacity-80">
                         <ReactMarkdown 
