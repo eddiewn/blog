@@ -25,6 +25,8 @@ const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
 
 const resendKey = process.env.RESEND_API;
 
+const secret = process.env.SECRET;
+
 const s3 = new S3Client({
     region: "auto",
     endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
@@ -82,10 +84,10 @@ app.use(
     session({
         store: new PgSession({
             pool: pool,
-            tableName : 'user_sessions',
+            tableName: "user_sessions",
             createTableIfMissing: true,
         }),
-        secret: "chungus!",
+        secret: secret!,
         resave: false,
         saveUninitialized: false,
 
@@ -292,13 +294,15 @@ app.post(
         const image = req.file;
 
         let profile_pic_url = null;
+
+        const randomImageName = (bytes = 16) =>
+            crypto.randomBytes(bytes).toString("hex");
+
+        const imageName = randomImageName();
+
         if (image) {
             console.log(image);
 
-            const randomImageName = (bytes = 16) =>
-                crypto.randomBytes(bytes).toString("hex");
-
-            const imageName = randomImageName();
             const params = {
                 Bucket: bucketName,
                 Key: imageName,
@@ -326,8 +330,8 @@ app.post(
         let values;
         try {
             if (profile_pic_url) {
-                query = `UPDATE users SET display_name = $1, bio = $2, profile_pic_url = $3 WHERE id = $4`;
-                values = [displayName, bio, profile_pic_url, id];
+                query = `UPDATE users SET display_name = $1, bio = $2, profile_pic_url = $3, profile_pic = $4 WHERE id = $5`;
+                values = [displayName, bio, profile_pic_url, imageName, id];
             } else {
                 query = `UPDATE users SET display_name = $1, bio = $2 WHERE id = $3`;
                 values = [displayName, bio, id];
@@ -355,9 +359,21 @@ app.post("/api/sign-out", (req, res) => {
 app.post("/api/fetch-user-info", async (req, res) => {
     const userId = req.body.userId;
     const userInfo = await pool.query(
-        "SELECT id, username, role, bio, profile_pic_url, display_name FROM users WHERE id = $1",
+        "SELECT id, username, role, bio, profile_pic_url, profile_pic, display_name FROM users WHERE id = $1",
         [userId],
     );
+
+    const user = userInfo.rows[0];
+    if (user.profile_pic) {
+        const command = new GetObjectCommand({
+            Bucket: bucketName,
+            Key: user.profile_pic,
+        });
+
+        user.profile_pic_url = await getSignedUrl(s3, command, {
+            expiresIn: 3600,
+        });
+    }
 
     res.send(userInfo.rows[0]);
 });
@@ -394,7 +410,7 @@ app.get("/posts", async (req, res) => {
     try {
         const { id } = req.query;
         const query = `SELECT * FROM posts WHERE id=$1`;
-        const values = [id]
+        const values = [id];
         const result = await pool.query(query, values);
 
         if (!result.rowCount)
