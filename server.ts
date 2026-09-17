@@ -127,7 +127,7 @@ app.get("/api/chungus", (req, res) => {
     res.send("Hello");
 });
 
-app.post("/api/register", (req, res) => {
+app.post("/api/register", async(req, res) => {
     try {
         const username = req.body.username;
         const password = req.body.password;
@@ -137,13 +137,15 @@ app.post("/api/register", (req, res) => {
         if (username.length < 3) throw "Username is too short";
 
         bcrypt.genSalt(saltRounds, function (err, salt) {
-            bcrypt.hash(password, salt, function (err, hash) {
+            bcrypt.hash(password, salt, async (err, hash) => {
                 const query = `INSERT INTO users(username, password_hash, role) VALUES ($1, $2, $3)`;
                 const values = [username, hash, "user"];
 
-                pool.query(query, values);
+                await pool.query(query, values);  
             });
         });
+
+
 
         res.json({ message: "Yes it worked" });
     } catch (error) {
@@ -290,7 +292,16 @@ app.post(
     "/api/update-profile",
     upload.single("profileImage"),
     async (req, res) => {
-        const { displayName, bio, id } = req.body;
+        const user = req.session.user
+
+        if(!user){
+            return res.status(401).json({
+                error: "Not logged in"
+            })
+        }
+
+        const { displayName, bio} = req.body;
+        const id = user.id;
         const image = req.file;
 
         let profile_pic_url = null;
@@ -435,19 +446,30 @@ app.get("/posts", async (req, res) => {
 });
 
 app.get("/api/get-tags", async (req, res) => {
-    const query = `SELECT * FROM tags`;
+    try {
+        const query = `SELECT * FROM tags`;
 
-    const tags = await pool.query(query);
+        const tags = await pool.query(query);
 
-    res.json(tags);
+        res.json(tags)        
+    } catch (error) {
+        res.send({message: error})
+    }
+;
 });
 
 app.get("/api/get-post-tags", async (req, res) => {
-    const query = `SELECT * FROM post_tags`;
+    try {
+        const query = `SELECT * FROM post_tags`;
 
-    const post_tags = await pool.query(query);
+        const post_tags = await pool.query(query);        
+        res.json(post_tags.rows);
 
-    res.json(post_tags.rows);
+    } catch (error) {
+        console.log("Unexpected Error:", error)        
+    }
+
+
 });
 
 app.get("/api/me", (req, res) => {
@@ -460,7 +482,7 @@ app.get("/api/me", (req, res) => {
             res.json({ user });
         }
     } catch (error) {
-        console.log("Error:", error);
+        console.log("Unexpected error:", error);
     }
 });
 
@@ -473,7 +495,10 @@ app.get("/api/author", async (req, res) => {
         const result = await pool.query(query, [author_id]);
 
         res.json(result.rows[0]);
-    } catch (error) {}
+    } catch (error) {
+        res.status(500).json({error: error})
+        console.log("Unexpected error", error)
+    }
 });
 
 app.listen(PORT, () => {
