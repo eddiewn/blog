@@ -17,7 +17,7 @@ const Contact = () => {
                         }}
                     >
                         <h2 className="text-2xl font-bold  mb-6">
-                            Get in touch
+                            Get in touch with us
                         </h2>
                         <div className="mb-5">
                             <label

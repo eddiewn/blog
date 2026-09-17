@@ -335,14 +335,14 @@ app.post(
     },
 );
 
-app.post("/api/sign-out", (req, res) =>{
+app.post("/api/sign-out", (req, res) => {
     req.session.destroy((error) => {
-        if(error) return res.json({message: "Failed to sign out"})
+        if (error) return res.json({ message: "Failed to sign out" });
 
         res.clearCookie("connect.sid");
         res.json({ message: "Succeded to sign out" });
-    })
-})
+    });
+});
 
 app.post("/api/fetch-user-info", async (req, res) => {
     const userId = req.body.userId;
@@ -385,8 +385,9 @@ app.get("/api/get-blogs", async (req, res) => {
 app.get("/posts", async (req, res) => {
     try {
         const { id } = req.query;
-        const query = `SELECT * FROM posts WHERE id=${id}`;
-        const result = await pool.query(query);
+        const query = `SELECT * FROM posts WHERE id=$1`;
+        const values = [id]
+        const result = await pool.query(query, values);
 
         if (!result.rowCount)
             throw new Error("Could not get post from database.");

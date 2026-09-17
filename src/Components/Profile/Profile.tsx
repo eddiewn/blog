@@ -99,6 +99,7 @@ const Profile = () => {
 
     console.log(blogs)
 
+    console.log(userInfo)
     return (
         <main className="m-auto">
             <section className=" bg-violet-200">

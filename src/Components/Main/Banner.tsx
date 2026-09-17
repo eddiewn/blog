@@ -11,9 +11,9 @@ const Banner = () => {
                     <p className="">Thoughts worth sharing. </p>
 
                     <p className="lg:w-2/5">
-                        From things I'm learning to ideas I'm exploring, this is
-                        where I write about what interests me, what I'm working
-                        on, and everything I discover along the way.
+                        From things you're learning to ideas you explore, this is
+                        where you can write about what interests you, what you're working
+                        on, and everything you discover along the way.
                     </p>
 
                 </div>
@@ -21,9 +21,6 @@ const Banner = () => {
                         <img 
                             src={arrowDown} 
                             alt=""
-                            onClick={() => {
-
-                            }}
                         />
                     </a>
             </div>

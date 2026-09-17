@@ -1,5 +1,6 @@
 import profilePlaceholder from "../../Assets/images/blogPostProfilePlaceholder.webp"
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router"
 
 type AuthorCardProps={
     author_id: number | undefined
@@ -16,6 +17,8 @@ type AuthorProps={
 function AuthorCard({author_id, created_at}: AuthorCardProps){
 
     const [author, setAuthor] = useState<AuthorProps| undefined>(undefined);
+        const navigate = useNavigate();
+
 
     useEffect(() => {
         if (author_id === null) return;
@@ -44,14 +47,18 @@ function AuthorCard({author_id, created_at}: AuthorCardProps){
 
     return(
         <>
-            <section className={`flex ${created_at == undefined ? "h-7" : "h-15"} gap-2`}>
+            <section className={`flex ${created_at == undefined ? "h-7" : "h-15"} gap-2`}
+                onClick={() => {
+                    navigate(`/profile/${author_id}`)
+                }}
+            >
                 <div className="h-full aspect-square">
                     <img className="rounded-full" src={profilePlaceholder} alt="" />
                 </div>
                 <div className="flex flex-col">
                     <div className="my-auto text-1xl">
                         <p className="font-bold">{author !== undefined ? (author.display_name ? author.display_name : author.username) : "John Doe"}</p>
-                        <p className="opacity-50">{created_at !== undefined ? new Date(created_at).toLocaleString() : "01-09-24 00:00:00"}</p>
+                        <p className="opacity-50">{created_at !== undefined ? new Date(created_at).toLocaleString() : ""}</p>
                     </div>
                 </div>
             </section>

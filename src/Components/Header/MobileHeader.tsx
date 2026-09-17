@@ -80,15 +80,6 @@ function MobileHeader({handleLogout}: HeaderProps) {
                             <span className="w-full h-px bg-black opacity-20" />
                             <li
                                 onClick={() => {
-                                    navigate("/about");
-                                    setShow(false);
-                                }}
-                            >
-                                About
-                            </li>
-                            <span className="w-full h-px bg-black opacity-20" />
-                            <li
-                                onClick={() => {
                                     user
                                         ? setUserDropDown(!userDropDown)
                                         : navigate("/auth");

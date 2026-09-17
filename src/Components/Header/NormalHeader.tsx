@@ -78,19 +78,6 @@ function NormalHeader({ isHome, handleLogout }: NormalHeaderProps) {
                         </li>
                         <li
                             onClick={() => {
-                                navigate("/about");
-                                setUserDropDown(false);
-                            }}
-                            className={`${
-                                currentPage === "/about"
-                                    ? "relative after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-full after:bg-current"
-                                    : "relative after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full hover:cursor-pointer"
-                            }`}
-                        >
-                            About
-                        </li>
-                        <li
-                            onClick={() => {
                                 user
                                     ? setUserDropDown(!userDropDown)
                                     : navigate("/auth");

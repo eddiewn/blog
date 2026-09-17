@@ -22,6 +22,7 @@ const Settings = () => {
         const formData = new FormData();
         formData.append("displayName", displayName)
         formData.append("bio", bio)
+
         if(userInfo){
             formData.append("id", String(userInfo.id))
         }
@@ -45,6 +46,7 @@ const Settings = () => {
 
             setUserInfo(info)
             setDisplayName(info.display_name || info.username)
+            setBio(info.bio || "");
         };
 
         fetch();
@@ -98,9 +100,8 @@ const Settings = () => {
                                 setBio(e.target.value);
                             }}
                             name="updateBio"
+                            value={bio}
                             >
-
-                            {!userInfo.bio ? "They dont say much about themself... but we are sure they are a great person." : userInfo.bio }
                         </textarea> 
                     </div>
                     <p>This is settings</p>
