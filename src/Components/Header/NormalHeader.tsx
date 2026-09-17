@@ -2,15 +2,15 @@ import { useNavigate } from "react-router";
 import { useContext } from "react";
 import UserContext from "../../context/UserContext";
 import { useState } from "react";
-
 import logo from "../../Assets/images/logo.png";
 import logoWhite from "../../Assets/images/logoWhite.png";
 
 type NormalHeaderProps = {
     isHome: boolean;
+    handleLogout: () => void;
 };
 
-function NormalHeader({ isHome }: NormalHeaderProps) {
+function NormalHeader({ isHome, handleLogout }: NormalHeaderProps) {
     const navigate = useNavigate();
 
     const { user } = useContext(UserContext);
@@ -116,10 +116,10 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                 <li
                     onClick={() => {
                         if (!user) return;
-                        console.log("This is userId in header: ", user.id)
+                        console.log("This is userId in header: ", user.id);
 
                         navigate(`/profile/${user.id}`);
-                        setUserDropDown(false)
+                        setUserDropDown(false);
                     }}
                 >
                     View Profile
@@ -127,10 +127,19 @@ function NormalHeader({ isHome }: NormalHeaderProps) {
                 <li
                     onClick={() => {
                         navigate(`/settings`);
-                        setUserDropDown(false)
+                        setUserDropDown(false);
                     }}
                 >
                     Edit Profile
+                </li>
+                <li
+                    onClick={() => {
+                        setUserDropDown(false);
+                        handleLogout();
+                        navigate("/auth");
+                    }}
+                >
+                    Sign out
                 </li>
             </ul>
         </>

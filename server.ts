@@ -335,6 +335,15 @@ app.post(
     },
 );
 
+app.post("/api/sign-out", (req, res) =>{
+    req.session.destroy((error) => {
+        if(error) return res.json({message: "Failed to sign out"})
+
+        res.clearCookie("connect.sid");
+        res.json({ message: "Succeded to sign out" });
+    })
+})
+
 app.post("/api/fetch-user-info", async (req, res) => {
     const userId = req.body.userId;
     const userInfo = await pool.query(

@@ -4,14 +4,21 @@ import { useNavigate } from "react-router";
 import { useContext } from "react";
 import UserContext from "../../context/UserContext";
 
-import logo from "../../Assets/images/logo.png"
+import logo from "../../Assets/images/logo.png";
 
-function MobileHeader() {
+type HeaderProps = {
+    handleLogout: () => void;
+};
+
+function MobileHeader({handleLogout}: HeaderProps) {
     const [show, setShow] = useState(false);
 
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
     console.log(user);
+
+    const [userDropDown, setUserDropDown] = useState<boolean>(false);
+
     return (
         <>
             <div className="fixed top-0 left-0 w-full z-50">
@@ -82,16 +89,51 @@ function MobileHeader() {
                             <span className="w-full h-px bg-black opacity-20" />
                             <li
                                 onClick={() => {
-                                    if (user) {
-                                        navigate(`/profile/${user.id}`);
-                                    } else {
-                                        navigate("/auth");
-                                    }
-
-                                    setShow(false);
+                                    user
+                                        ? setUserDropDown(!userDropDown)
+                                        : navigate("/auth");
                                 }}
                             >
                                 {user !== null ? user.username : "Log in"}
+                                <ul
+                                    className={`flex flex-col items-center absolute left-full right-0 transform w-screen bg-[#white] gap-1 py-2
+                                transition-transform duration-300
+                                ${userDropDown ? "-translate-x-full" : "translate-x-0"}
+                                ${user ? "block" : "hidden"}                            
+                                `}
+                                >
+                                    <li
+                                        onClick={() => {
+                                            if (!user) return;
+                                            console.log(
+                                                "This is userId in header: ",
+                                                user.id,
+                                            );
+
+                                            navigate(`/profile/${user.id}`);
+                                            setUserDropDown(false);
+                                        }}
+                                    >
+                                        View Profile
+                                    </li>
+                                    <li
+                                        onClick={() => {
+                                            navigate(`/settings`);
+                                            setUserDropDown(false);
+                                        }}
+                                    >
+                                        Edit Profile
+                                    </li>
+                                    <li
+                                        onClick={() => {
+                                            setUserDropDown(false);
+                                            handleLogout();
+                                            navigate("/auth");
+                                        }}
+                                    >
+                                        Sign out
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </nav>

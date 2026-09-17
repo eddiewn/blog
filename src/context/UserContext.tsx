@@ -1,5 +1,6 @@
 import {createContext, useState, useEffect, type ReactNode} from "react";
 
+
 type User = {
     id: number;
     username: string;
@@ -32,6 +33,9 @@ export const UserProvider = ({children}: {children: ReactNode}) => {
 
                 if (data.user) {
                     setUser(data.user);
+                }
+                else{
+                    setUser(null)
                 }
             } catch (error) {
                 console.log("Error getting user:", error);

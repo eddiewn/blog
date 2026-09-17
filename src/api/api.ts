@@ -111,3 +111,18 @@ export const updateProfile = async (formData: FormData) => {
         
     }
 }
+
+export const signOut = async () => {
+    try {
+        const URL = "http://localhost:4000/api/sign-out"
+        const response = await fetch(URL, {
+            method: "POST",
+            credentials: "include",
+        })
+        const data = await response.json();
+
+        console.log(data)
+    } catch (error) {
+        console.log(error)
+    }
+}
