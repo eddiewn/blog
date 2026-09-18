@@ -7,6 +7,9 @@ import connectPgSimple from "connect-pg-simple";
 import multer from "multer";
 import crypto from "crypto";
 import { rateLimit } from "express-rate-limit";
+import cookieParser from "cookie-parser";
+
+import { doubleCsrf } from "csrf-csrf";
 
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
@@ -90,7 +93,7 @@ app.use(
         }),
         secret: secret!,
         resave: false,
-        saveUninitialized: false,
+        saveUninitialized: true,
 
         cookie: {
             //ONly for temporary HTTP site
@@ -100,6 +103,28 @@ app.use(
         },
     }),
 );
+
+app.use(cookieParser());
+
+
+const {
+    invalidCsrfTokenError,
+    generateCsrfToken,
+    doubleCsrfProtection,
+} = doubleCsrf({
+    getSecret: () => process.env.CSRF_SECRET!,
+    getSessionIdentifier: (req) => req.session.id,
+    cookieName: "csrf-token",
+    cookieOptions: {
+        httpOnly: false,
+        secure: false,
+        sameSite: "lax",
+    },
+    size: 64,
+    ignoredMethods: ["GET", "HEAD", "OPTIONS"],
+});
+
+app.use(doubleCsrfProtection);
 
 app.use(express.json());
 
@@ -121,12 +146,28 @@ app.use("/api/admin/", (req, res, next) => {
     next();
 });
 
+app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (error === invalidCsrfTokenError) {
+        return res.status(403).json({
+            error: "Invalid CSRF token",
+        });
+    }
+
+    next(error);
+});
+
 app.get("/api/admin/enter-blog", (req, res) => {
     res.json({ auth: true });
 });
 
 app.get("/api/chungus", (req, res) => {
     res.send("Hello");
+});
+
+app.get("/api/csrf-token", (req, res) => {
+
+    const token = generateCsrfToken(req, res);
+    res.json({ csrfToken: token });
 });
 
 app.post("/api/register", async (req, res) => {
@@ -155,7 +196,7 @@ app.post("/api/register", async (req, res) => {
 const sendMailLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 10,
-})
+});
 
 app.post("/api/send-mail", sendMailLimiter, async (req, res) => {
     try {
@@ -164,7 +205,9 @@ app.post("/api/send-mail", sendMailLimiter, async (req, res) => {
         if (
             typeof name !== "string" ||
             typeof email !== "string" ||
-            typeof message !== "string" || message.length > 500 || name.length > 30
+            typeof message !== "string" ||
+            message.length > 500 ||
+            name.length > 30
         ) {
             return res.status(400).json({ error: "Invalid input" });
         }
@@ -335,6 +378,14 @@ app.post(
         const id = user.id;
         const image = req.file;
 
+        if (image) {
+            if (!image.mimetype.startsWith("image/")) {
+                return res.status(400).json({
+                    error: "Only image files are allowed",
+                });
+            }
+        }
+
         let profile_pic_url = null;
 
         const randomImageName = (bytes = 16) =>
@@ -398,8 +449,9 @@ app.post("/api/sign-out", (req, res) => {
     });
 });
 
-app.post("/api/fetch-user-info", async (req, res) => {
-    const userId = req.body.userId;
+app.get("/api/fetch-user-info", async (req, res) => {
+    const userId = Number(req.query.userId);
+
     const userInfo = await pool.query(
         "SELECT id, username, role, bio, profile_pic_url, profile_pic, display_name FROM users WHERE id = $1",
         [userId],

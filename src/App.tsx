@@ -8,12 +8,18 @@ import Auth from "./Components/AuthForms/Auth";
 import Createblog from "./Components/Blog/Createblog";
 import Viewblogs from "./Components/Blog/Viewblogs";
 import Post from "./Components/Blog/Post";
-import Settings from "./Components/Settings/Settings"
+import Settings from "./Components/Settings/Settings";
 
 import Profile from "./Components/Profile/Profile";
 import Layout from "./Components/Layout";
+import { fetchCsrfToken } from "./api/api";
+import { useEffect } from "react";
 
 function App() {
+    useEffect(() => {
+        fetchCsrfToken();
+    }, []);
+
     return (
         <UserProvider>
             <Router>

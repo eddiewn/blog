@@ -1,39 +1,24 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
+import { login } from "../../api/api";
 import UserContext from "../../context/UserContext";
-
 import logo from "../../Assets/images/logo.png"
 
 const Login = () => {
-    const { setUser } = useContext(UserContext);
     const navigate = useNavigate();
 
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const { setUser } = useContext(UserContext);
 
     const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const URL = "http://localhost:4000/api/login";
-            const response = await fetch(URL, {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                }),
-            });
-            const data = await response.json();
+            const data = await login({username, password});
 
-            if (!response.ok) {
-                throw `Failed to login: ${data.error} `;
-            } else {
-                if (data.valid === true) {
-                    setUser(data.user);
-                    navigate("/");
-                }
-                console.log("Logged in chungus");
+            if(data.valid){
+                setUser(data.user);
+                navigate("/")
             }
         } catch (error) {
             console.log(error);
