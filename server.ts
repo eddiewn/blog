@@ -6,6 +6,7 @@ import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import multer from "multer";
 import crypto from "crypto";
+import { rateLimit } from "express-rate-limit";
 
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
@@ -103,6 +104,7 @@ app.use(
 app.use(express.json());
 
 import { Resend } from "resend";
+import { create } from "domain";
 
 const resend = new Resend(resendKey);
 
@@ -127,7 +129,7 @@ app.get("/api/chungus", (req, res) => {
     res.send("Hello");
 });
 
-app.post("/api/register", async(req, res) => {
+app.post("/api/register", async (req, res) => {
     try {
         const username = req.body.username;
         const password = req.body.password;
@@ -136,27 +138,36 @@ app.post("/api/register", async(req, res) => {
         if (password !== confirmPassword) throw "Password is not same";
         if (username.length < 3) throw "Username is too short";
 
-        bcrypt.genSalt(saltRounds, function (err, salt) {
-            bcrypt.hash(password, salt, async (err, hash) => {
-                const query = `INSERT INTO users(username, password_hash, role) VALUES ($1, $2, $3)`;
-                const values = [username, hash, "user"];
+        const hash = await bcrypt.hash(password, saltRounds);
 
-                await pool.query(query, values);  
-            });
-        });
+        const query = `INSERT INTO users(username, password_hash, role) VALUES ($1, $2, $3)`;
+        const values = [username, hash, "user"];
 
+        await pool.query(query, values);
 
-
-        res.json({ message: "Yes it worked" });
+        res.status(201).json({ message: "User created" });
     } catch (error) {
         console.log("Error in server register:", error);
         res.status(400).json({ error: `Error regestering user: ${error}` });
     }
 });
 
-app.post("/api/send-mail", async (req, res) => {
+const sendMailLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+})
+
+app.post("/api/send-mail", sendMailLimiter, async (req, res) => {
     try {
         const { name, email, message } = req.body;
+
+        if (
+            typeof name !== "string" ||
+            typeof email !== "string" ||
+            typeof message !== "string" || message.length > 500 || name.length > 30
+        ) {
+            return res.status(400).json({ error: "Invalid input" });
+        }
 
         console.log(name, email, message);
 
@@ -180,7 +191,12 @@ app.post("/api/send-mail", async (req, res) => {
     }
 });
 
-app.post("/api/login", async (req, res) => {
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+});
+
+app.post("/api/login", loginLimiter, async (req, res) => {
     try {
         const username = req.body.username;
         const password = req.body.password;
@@ -190,7 +206,14 @@ app.post("/api/login", async (req, res) => {
         const query = `SELECT password_hash FROM users WHERE username = $1`;
         const value = [username];
 
-        const hash = (await pool.query(query, value)).rows[0].password_hash;
+        const result = await pool.query(query, value);
+        if (result.rows.length === 0) {
+            return res
+                .status(401)
+                .json({ error: "Password or username not matching" });
+        }
+
+        const hash = result.rows[0].password_hash;
 
         bcrypt.compare(password, hash, async function (err, result) {
             if (result) {
@@ -205,17 +228,25 @@ app.post("/api/login", async (req, res) => {
 
                 res.json({ valid: true, user: req.session.user });
             } else {
-                res.status(400).json({ error: "Not valid login" });
+                res.status(401).json({
+                    error: "Password or username not matching",
+                });
             }
         });
     } catch (error) {
-        res.status(400).json({ error: error });
+        res.status(400).json({ error: "Unexpected server error" });
     }
+});
+
+const createBlogLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
 });
 
 app.post(
     "/api/admin/create-blog",
     upload.single("cover_image"),
+    createBlogLimiter,
     async (req, res) => {
         try {
             const title = req.body.title;
@@ -292,15 +323,15 @@ app.post(
     "/api/update-profile",
     upload.single("profileImage"),
     async (req, res) => {
-        const user = req.session.user
+        const user = req.session.user;
 
-        if(!user){
+        if (!user) {
             return res.status(401).json({
-                error: "Not logged in"
-            })
+                error: "Not logged in",
+            });
         }
 
-        const { displayName, bio} = req.body;
+        const { displayName, bio } = req.body;
         const id = user.id;
         const image = req.file;
 
@@ -451,25 +482,21 @@ app.get("/api/get-tags", async (req, res) => {
 
         const tags = await pool.query(query);
 
-        res.json(tags)        
+        res.json(tags);
     } catch (error) {
-        res.send({message: error})
+        res.send({ message: error });
     }
-;
 });
 
 app.get("/api/get-post-tags", async (req, res) => {
     try {
         const query = `SELECT * FROM post_tags`;
 
-        const post_tags = await pool.query(query);        
+        const post_tags = await pool.query(query);
         res.json(post_tags.rows);
-
     } catch (error) {
-        console.log("Unexpected Error:", error)        
+        console.log("Unexpected Error:", error);
     }
-
-
 });
 
 app.get("/api/me", (req, res) => {
@@ -496,8 +523,8 @@ app.get("/api/author", async (req, res) => {
 
         res.json(result.rows[0]);
     } catch (error) {
-        res.status(500).json({error: error})
-        console.log("Unexpected error", error)
+        res.status(500).json({ error: error });
+        console.log("Unexpected error", error);
     }
 });
 

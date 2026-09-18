@@ -36,7 +36,7 @@ const Login = () => {
                 console.log("Logged in chungus");
             }
         } catch (error) {
-            console.log("Error handling login:", error);
+            console.log(error);
         }
     };
 

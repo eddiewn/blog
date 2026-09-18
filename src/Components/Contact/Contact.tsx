@@ -30,6 +30,7 @@ const Contact = () => {
                                 type="text"
                                 id="name"
                                 name="name"
+                                maxLength={50}
                                 placeholder="Your name"
                                 className="w-full border border-gray-700 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-blue-500 transition-colors"
                                 onChange={(e) => {
@@ -66,6 +67,7 @@ const Contact = () => {
                                 id="message"
                                 name="message"
                                 rows={6}
+                                maxLength={500}
                                 placeholder="Write your message..."
                                 className="w-full border border-gray-700 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-blue-500 transition-colors resize-none"
                                 onChange={(e) => {
