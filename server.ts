@@ -106,23 +106,19 @@ app.use(
 
 app.use(cookieParser());
 
-
-const {
-    invalidCsrfTokenError,
-    generateCsrfToken,
-    doubleCsrfProtection,
-} = doubleCsrf({
-    getSecret: () => process.env.CSRF_SECRET!,
-    getSessionIdentifier: (req) => req.session.id,
-    cookieName: "csrf-token",
-    cookieOptions: {
-        httpOnly: false,
-        secure: false,
-        sameSite: "lax",
-    },
-    size: 64,
-    ignoredMethods: ["GET", "HEAD", "OPTIONS"],
-});
+const { invalidCsrfTokenError, generateCsrfToken, doubleCsrfProtection } =
+    doubleCsrf({
+        getSecret: () => process.env.CSRF_SECRET!,
+        getSessionIdentifier: (req) => req.session.id,
+        cookieName: "csrf-token",
+        cookieOptions: {
+            httpOnly: false,
+            secure: false,
+            sameSite: "lax",
+        },
+        size: 64,
+        ignoredMethods: ["GET", "HEAD", "OPTIONS"],
+    });
 
 app.use(doubleCsrfProtection);
 
@@ -146,15 +142,22 @@ app.use("/api/admin/", (req, res, next) => {
     next();
 });
 
-app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    if (error === invalidCsrfTokenError) {
-        return res.status(403).json({
-            error: "Invalid CSRF token",
-        });
-    }
+app.use(
+    (
+        error: any,
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction,
+    ) => {
+        if (error === invalidCsrfTokenError) {
+            return res.status(403).json({
+                error: "Invalid CSRF token",
+            });
+        }
 
-    next(error);
-});
+        next(error);
+    },
+);
 
 app.get("/api/admin/enter-blog", (req, res) => {
     res.json({ auth: true });
@@ -165,7 +168,6 @@ app.get("/api/chungus", (req, res) => {
 });
 
 app.get("/api/csrf-token", (req, res) => {
-
     const token = generateCsrfToken(req, res);
     res.json({ csrfToken: token });
 });
@@ -435,7 +437,7 @@ app.post(
             res.send({ message: "Hopefully it succeeded..." });
         } catch (error) {
             console.error(error);
-            res.json({error: "Unexpected server error"});;
+            res.json({ error: "Unexpected server error" });
         }
     },
 );
@@ -525,7 +527,7 @@ app.get("/posts", async (req, res) => {
         res.status(200).json(blog);
     } catch (error) {
         console.log("Error getting specific post: ", error);
-        res.json({error: "Unexpected server error"});
+        res.json({ error: "Unexpected server error" });
     }
 });
 
@@ -537,7 +539,7 @@ app.get("/api/get-tags", async (req, res) => {
 
         res.json(tags);
     } catch (error) {
-        console.error(error)
+        console.error(error);
         res.json({ error: "Unexpected server error" });
     }
 });
@@ -550,7 +552,7 @@ app.get("/api/get-post-tags", async (req, res) => {
         res.json(post_tags.rows);
     } catch (error) {
         console.error("Unexpected Error:", error);
-        res.json({error: "Unexpected server error"})
+        res.json({ error: "Unexpected server error" });
     }
 });
 
@@ -565,7 +567,7 @@ app.get("/api/me", (req, res) => {
         }
     } catch (error) {
         console.error("Unexpected error:", error);
-        res.json({error: "Unexpected server error"})
+        res.json({ error: "Unexpected server error" });
     }
 });
 
