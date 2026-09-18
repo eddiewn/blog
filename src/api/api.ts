@@ -31,6 +31,42 @@ export const login = async ({ username, password }: LoginProps) => {
             password: password,
         }),
     });
+
+    const data = await response.json();
+    console.log(data)
+    if (!response.ok) {
+        throw new Error(`Failed to login: ${data.error} `);
+    } else {
+        return data;
+    }
+};
+
+type RegisterProps = {
+    username: string;
+    password: string;
+    confirmPassword: string;
+};
+
+export const register = async ({
+    username,
+    password,
+    confirmPassword,
+}: RegisterProps) => {
+    const URL = "http://localhost:4000/api/register";
+    const response = await fetch(URL, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+            "x-csrf-token": csrfToken,
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password,
+            confirmPassword: confirmPassword,
+        }),
+    });
+
     const data = await response.json();
 
     if (!response.ok) {
@@ -152,8 +188,13 @@ export const signOut = async () => {
                 "x-csrf-token": csrfToken,
             },
         });
+        
         const data = await response.json();
+        console.log(data);
 
+        if (response.ok) {
+            csrfToken = "";
+        }
         console.log(data);
     } catch (error) {
         console.log(error);

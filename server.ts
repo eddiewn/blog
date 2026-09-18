@@ -188,8 +188,8 @@ app.post("/api/register", async (req, res) => {
 
         res.status(201).json({ message: "User created" });
     } catch (error) {
-        console.log("Error in server register:", error);
-        res.status(400).json({ error: `Error regestering user: ${error}` });
+        console.error("Error in server register:", error);
+        res.json({ error: "Unexpected server error" });
     }
 });
 
@@ -226,7 +226,7 @@ app.post("/api/send-mail", sendMailLimiter, async (req, res) => {
             message: "Email sent successfully",
         });
     } catch (error) {
-        console.error("RESEND ERROR:", error);
+        // console.error("RESEND ERROR:", error);
 
         res.status(500).json({
             error: "Failed to send email",
@@ -297,7 +297,7 @@ app.post(
             const content = req.body.content;
             const tags = JSON.parse(req.body.tags);
             const image = req.file;
-            const author_id = req.body.author_id;
+            const author_id = req.session.user!.id;
 
             const randomImageName = (bytes = 16) =>
                 crypto.randomBytes(bytes).toString("hex");
@@ -357,7 +357,7 @@ app.post(
             });
         } catch (error) {
             console.log(error);
-            res.status(400).json({ error: "Failed to insert blog" });
+            res.status(400).json({ error: "Unexpected server error" });
         }
     },
 );
@@ -434,8 +434,8 @@ app.post(
 
             res.send({ message: "Hopefully it succeeded..." });
         } catch (error) {
-            console.log("Error: ", error);
-            res.send(error);
+            console.error(error);
+            res.json({error: "Unexpected server error"});;
         }
     },
 );
@@ -494,8 +494,9 @@ app.get("/api/get-blogs", async (req, res) => {
             blogs,
         });
     } catch (error) {
-        res.status(500).json({
-            error: error,
+        console.error(error);
+        res.json({
+            error: "Unexpected server error",
         });
     }
 });
@@ -523,8 +524,8 @@ app.get("/posts", async (req, res) => {
 
         res.status(200).json(blog);
     } catch (error) {
-        res.send(error);
         console.log("Error getting specific post: ", error);
+        res.json({error: "Unexpected server error"});
     }
 });
 
@@ -536,7 +537,8 @@ app.get("/api/get-tags", async (req, res) => {
 
         res.json(tags);
     } catch (error) {
-        res.send({ message: error });
+        console.error(error)
+        res.json({ error: "Unexpected server error" });
     }
 });
 
@@ -547,7 +549,8 @@ app.get("/api/get-post-tags", async (req, res) => {
         const post_tags = await pool.query(query);
         res.json(post_tags.rows);
     } catch (error) {
-        console.log("Unexpected Error:", error);
+        console.error("Unexpected Error:", error);
+        res.json({error: "Unexpected server error"})
     }
 });
 
@@ -561,7 +564,8 @@ app.get("/api/me", (req, res) => {
             res.json({ user });
         }
     } catch (error) {
-        console.log("Unexpected error:", error);
+        console.error("Unexpected error:", error);
+        res.json({error: "Unexpected server error"})
     }
 });
 
@@ -575,8 +579,8 @@ app.get("/api/author", async (req, res) => {
 
         res.json(result.rows[0]);
     } catch (error) {
-        res.status(500).json({ error: error });
-        console.log("Unexpected error", error);
+        console.error(error);
+        res.status(500).json({ error: "Error getting author" });
     }
 });
 

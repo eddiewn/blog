@@ -48,7 +48,7 @@ const Post = () => {
 
     return(
         <>
-            <main className="py-10 flex flex-col gap-10">
+            <main className="py-10 flex flex-col gap-10 min-h-screen">
             <div className="w-full md:w-4/5 md:m-auto lg:w-3/6 h-full">
                 <div className="flex flex-col bg-white py-20 gap-10 text-black p-5">
                     <section className="flex flex-col gap-5">

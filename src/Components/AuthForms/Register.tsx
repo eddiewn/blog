@@ -1,39 +1,32 @@
 import { useNavigate } from "react-router";
-import { useState } from "react";
-import logo from "../../Assets/images/logo.png"
+import { useContext, useState } from "react";
+import logo from "../../Assets/images/logo.png";
+import UserContext from "../../context/UserContext";
+import { fetchCsrfToken, login, register } from "../../api/api";
+
 const Register = () => {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const { setUser } = useContext(UserContext);
 
-    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        try {
+            await fetchCsrfToken();
 
-        (async () => {
-            try {
-                const URL = "http://localhost:4000/api/register";
-                const response = await fetch(URL, {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        username: username,
-                        password: password,
-                        confirmPassword: confirmPassword,
-                    }),
-                });
+            await register({ username, password, confirmPassword });
 
-                const data = await response.json();
-
-                if (!response.ok) return console.log(data.error);
-
-                console.log(data.message);
-            } catch (error) {
-                console.log("Error inserting user:", error);
+            const data = await login({ username, password });
+            if (data.valid) {
+                setUser(data.user);
+                navigate("/");
             }
-        })();
+        } catch (error) {
+            console.log("Error inserting user:", error);
+        }
     };
 
     return (
@@ -76,7 +69,6 @@ const Register = () => {
                             }}
                             className="bg-white w-full h-15 rounded-xl border border-violet-200 focus:border-2 px-3 pt-4 pb-1 outline-none focus:border-violet-400"
                         />
-
                     </div>
                     <div className="relative w-full">
                         <label
@@ -85,20 +77,21 @@ const Register = () => {
                         >
                             Confirm Password
                         </label>
-                            <input
+                        <input
                             type="password"
                             onChange={(e) => {
                                 setConfirmPassword(e.target.value);
                             }}
                             className="bg-white w-full h-15 rounded-xl border border-violet-200 focus:border-2 px-3 pt-4 pb-1 outline-none focus:border-violet-400"
                         />
-                        </div>
-                
+                    </div>
+
                     <button
                         className="bg-violet-500 text-white rounded-xl p-2 flex justify-center items-center gap-2"
                         type="submit"
                     >
-                        Register <i className="fa-solid fa-arrow-right-long"></i>
+                        Register{" "}
+                        <i className="fa-solid fa-arrow-right-long"></i>
                     </button>
                 </form>
                 <div className="flex gap-5">
