@@ -1,6 +1,7 @@
 import profilePlaceholder from "../../Assets/images/blogPostProfilePlaceholder.webp"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router"
+import { fetchUserInfo } from "../../api/api"
 
 type AuthorCardProps={
     author_id: number | undefined
@@ -12,6 +13,7 @@ type AuthorProps={
     id: number;
     role: string;
     display_name: string;
+    profile_pic_url: string;
 }
 
 function AuthorCard({author_id, created_at}: AuthorCardProps){
@@ -21,29 +23,18 @@ function AuthorCard({author_id, created_at}: AuthorCardProps){
 
 
     useEffect(() => {
+        console.log(author_id)
         if (author_id === null) return;
 
-        const getAuthor = async () => {
-            try {
-                const URL = `http://localhost:4000/api/author?author_id=${author_id}`;
+        const fetchAuthor = async() => {
+            const data = await fetchUserInfo(Number(author_id))
 
-                const response = await fetch(URL);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                console.log("Is this NAN?", data);
-                setAuthor(data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        getAuthor();
+            setAuthor(data); 
+        }
+        
+        fetchAuthor();
     }, [author_id]);
+
 
     return(
         <>
@@ -53,7 +44,7 @@ function AuthorCard({author_id, created_at}: AuthorCardProps){
                 }}
             >
                 <div className="h-full aspect-square">
-                    <img className="rounded-full" src={profilePlaceholder} alt="" />
+                    <img className="rounded-full w-full h-full" src={author !== undefined && author.profile_pic_url ? author.profile_pic_url : profilePlaceholder} alt="" />
                 </div>
                 <div className="flex flex-col">
                     <div className="my-auto text-1xl">

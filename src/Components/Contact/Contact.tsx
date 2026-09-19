@@ -92,12 +92,9 @@ const Contact = () => {
                             ></iframe>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <h3 className="font-bold">Where it all happens</h3>
+                            <h3 className="font-bold">Want to be able to make your own posts?</h3>
                             <p className="lg:w-3/5">
-                                This is where I write all my posts, right here
-                                in Malmö, Sweden. It's where I spend my time
-                                learning, building, and sharing what I discover
-                                along the way.
+                                Contact through this form if you want admin privilege and be able to make your own posts.
                             </p>
                         </div>
                     </div>

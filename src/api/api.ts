@@ -111,11 +111,17 @@ type sendMailProps = {
 export const sendMail = async ({ name, email, message }: sendMailProps) => {
     console.log(name, email, message);
     try {
+
+        if (!csrfToken) {
+            await fetchCsrfToken();
+        }
         const URL = "http://localhost:4000/api/send-mail";
         const response = await fetch(URL, {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
+                "x-csrf-token": csrfToken,
             },
             body: JSON.stringify({
                 name: name,
@@ -169,13 +175,20 @@ export const getPostTags = async () => {
 export const updateProfile = async (formData: FormData) => {
     try {
         const URL = "http://localhost:4000/api/update-profile";
-        const response = await fetch(URL, {
+        const response = await fetch(URL, 
+            {
             method: "POST",
+            headers: {
+                "x-csrf-token": csrfToken,
+            },
+            credentials: "include",
             body: formData,
         });
-        const data = response.json();
+        const data = await response.json();
         console.log(data);
-    } catch (error) {}
+    } catch (error) {
+        console.log("Error updating profile, ", error);
+    }
 };
 
 export const signOut = async () => {

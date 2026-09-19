@@ -159,6 +159,8 @@ app.use(
     },
 );
 
+app.set("trust proxy", 1);
+
 app.get("/api/admin/enter-blog", (req, res) => {
     res.json({ auth: true });
 });
@@ -216,12 +218,21 @@ app.post("/api/send-mail", sendMailLimiter, async (req, res) => {
 
         console.log(name, email, message);
 
+        function escapeHtml(unsafe: string) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
         await resend.emails.send({
             from: "contact@eddiewiiknilsson.com",
             to: "wiiknilssoneddie@gmail.com",
             replyTo: email,
             subject: `Message from ${name}`,
-            html: `<p>${message}</p>`,
+            html: `<p>${escapeHtml(message)}</p>`,
         });
 
         res.status(200).json({
@@ -571,20 +582,20 @@ app.get("/api/me", (req, res) => {
     }
 });
 
-app.get("/api/author", async (req, res) => {
-    try {
-        const author_id = Number(req.query.author_id);
-        console.log(author_id);
+// app.get("/api/author", async (req, res) => {
+//     try {
+//         const author_id = Number(req.query.author_id);
+//         console.log(author_id);
 
-        const query = `SELECT id, username, role, display_name FROM users WHERE id = $1`;
-        const result = await pool.query(query, [author_id]);
+//         const query = `SELECT id, username, role, display_name, profile_pic_url FROM users WHERE id = $1`;
+//         const result = await pool.query(query, [author_id]);
 
-        res.json(result.rows[0]);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error getting author" });
-    }
-});
+//         res.json(result.rows[0]);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: "Error getting author" });
+//     }
+// });
 
 app.listen(PORT, () => {
     console.log(`Listening to port: ${PORT}`);

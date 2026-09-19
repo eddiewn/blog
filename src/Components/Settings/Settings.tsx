@@ -51,7 +51,7 @@ const Settings = () => {
 
         fetch();
 
-    }, []);
+    }, [user]);
 
 
     if(!userInfo) return;
