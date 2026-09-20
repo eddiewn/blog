@@ -17,27 +17,34 @@ type LoginProps = {
 };
 
 export const login = async ({ username, password }: LoginProps) => {
-    console.log(csrfToken);
-    const URL = "http://localhost:4000/api/login";
-    const response = await fetch(URL, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-            "x-csrf-token": csrfToken,
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password,
-        }),
-    });
+    try {
+        if (!csrfToken) {
+            await fetchCsrfToken();
+        }
+        console.log(csrfToken);
+        const URL = "http://localhost:4000/api/login";
+        const response = await fetch(URL, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "x-csrf-token": csrfToken,
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            }),
+        });
 
-    const data = await response.json();
-    console.log(data)
-    if (!response.ok) {
-        throw new Error(`Failed to login: ${data.error} `);
-    } else {
-        return data;
+        const data = await response.json();
+        console.log(data);
+        if (!response.ok) {
+            throw new Error(`Failed to login: ${data.error} `);
+        } else {
+            return data;
+        }
+    } catch (error) {
+        console.log("Error logging in");
     }
 };
 
@@ -52,27 +59,34 @@ export const register = async ({
     password,
     confirmPassword,
 }: RegisterProps) => {
-    const URL = "http://localhost:4000/api/register";
-    const response = await fetch(URL, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-            "x-csrf-token": csrfToken,
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password,
-            confirmPassword: confirmPassword,
-        }),
-    });
+    try {
+        if (!csrfToken) {
+            await fetchCsrfToken();
+        }
+        const URL = "http://localhost:4000/api/register";
+        const response = await fetch(URL, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "x-csrf-token": csrfToken,
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                confirmPassword: confirmPassword,
+            }),
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok) {
-        throw new Error(`Failed to login: ${data.error} `);
-    } else {
-        return data;
+        if (!response.ok) {
+            throw new Error(`Failed to login: ${data.error} `);
+        } else {
+            return data;
+        }
+    } catch (error) {
+        console.log("Error registering");
     }
 };
 
@@ -90,16 +104,16 @@ export const fetchTags = async () => {
 };
 
 export const fetchUserInfo = async (userId: number) => {
-    const URL = `http://localhost:4000/api/fetch-user-info?userId=${userId}`;
-
     try {
+        const URL = `http://localhost:4000/api/fetch-user-info?userId=${userId}`;
+
         if (!userId) throw new Error("No userId");
         const response = await fetch(URL);
 
         const data = response.json();
         return data;
     } catch (error) {
-        console.log("Error fetching user data, ", error);
+        console.log("Error fetching user data");
     }
 };
 
@@ -111,7 +125,6 @@ type sendMailProps = {
 export const sendMail = async ({ name, email, message }: sendMailProps) => {
     console.log(name, email, message);
     try {
-
         if (!csrfToken) {
             await fetchCsrfToken();
         }
@@ -175,8 +188,7 @@ export const getPostTags = async () => {
 export const updateProfile = async (formData: FormData) => {
     try {
         const URL = "http://localhost:4000/api/update-profile";
-        const response = await fetch(URL, 
-            {
+        const response = await fetch(URL, {
             method: "POST",
             headers: {
                 "x-csrf-token": csrfToken,
@@ -201,7 +213,7 @@ export const signOut = async () => {
                 "x-csrf-token": csrfToken,
             },
         });
-        
+
         const data = await response.json();
         console.log(data);
 
@@ -210,6 +222,6 @@ export const signOut = async () => {
         }
         console.log(data);
     } catch (error) {
-        console.log(error);
+        console.log("Error signing out");
     }
 };

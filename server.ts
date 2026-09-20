@@ -8,6 +8,8 @@ import multer from "multer";
 import crypto from "crypto";
 import { rateLimit } from "express-rate-limit";
 import cookieParser from "cookie-parser";
+import { fileTypeFromBuffer } from "file-type";
+import fs from "fs";
 
 import { doubleCsrf } from "csrf-csrf";
 
@@ -219,12 +221,12 @@ app.post("/api/send-mail", sendMailLimiter, async (req, res) => {
         console.log(name, email, message);
 
         function escapeHtml(unsafe: string) {
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
         await resend.emails.send({
@@ -312,6 +314,21 @@ app.post(
             const image = req.file;
             const author_id = req.session.user!.id;
 
+            if (image) {
+                console.log(req.file);
+                console.log(req.file?.path);
+
+                // read the file and return buffer
+                const buffer = image.buffer;
+                // get the file type
+                const type = await fileTypeFromBuffer(buffer);
+                // validate
+                const allowedTypes = ["image/jpeg", "image/png"];
+                if (!type || !allowedTypes.includes(type.mime)) {
+                    throw new Error("Invalid file type");
+                }
+            }
+
             const randomImageName = (bytes = 16) =>
                 crypto.randomBytes(bytes).toString("hex");
 
@@ -392,10 +409,17 @@ app.post(
         const image = req.file;
 
         if (image) {
-            if (!image.mimetype.startsWith("image/")) {
-                return res.status(400).json({
-                    error: "Only image files are allowed",
-                });
+            console.log(req.file);
+            console.log(req.file?.path);
+
+            // read the file and return buffer
+            const buffer = image.buffer;
+            // get the file type
+            const type = await fileTypeFromBuffer(buffer);
+            // validate
+            const allowedTypes = ["image/jpeg", "image/png"];
+            if (!type || !allowedTypes.includes(type.mime)) {
+                throw new Error("Invalid file type");
             }
         }
 
