@@ -397,8 +397,23 @@ app.post(
     },
 );
 
+const requireLogin = (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+) => {
+    if (!req.session.user) {
+        return res.status(401).json({
+            error: "Not logged in",
+        });
+    }
+
+    next();
+};
+
 app.post(
     "/api/update-profile",
+    requireLogin,
     upload.single("profileImage"),
     async (req, res) => {
         const user = req.session.user;
