@@ -16,18 +16,18 @@ const Aside = ({ setSelectedTagId }: AsideProps) => {
     const [selectedTag, setSelectedTag] = useState<string>("All");
 
     useEffect(() => {
-        // const fetch = async () => {
-        //     const data = await fetchTags();
-        //     const tagsArray: TagObjectProps[] = [];
+        const fetch = async () => {
+            const data = await fetchTags();
+            const tagsArray: TagObjectProps[] = [];
 
-        //     for (let index = 0; index < data.rowCount; index++) {
-        //         tagsArray.push(data.rows[index]);
-        //     }
+            for (let index = 0; index < data.rowCount; index++) {
+                tagsArray.push(data.rows[index]);
+            }
 
-        //     console.log(tagsArray.slice(0, 6));
-        //     setFirstTen(tagsArray.slice(0, 6));
-        // };
-        // fetch();
+            console.log(tagsArray.slice(0, 6));
+            setFirstTen(tagsArray.slice(0, 6));
+        };
+        fetch();
     }, []);
 
     return (

@@ -38,17 +38,17 @@ function AuthorCard({author_id, created_at}: AuthorCardProps){
 
     return(
         <>
-            <section className={`flex ${created_at == undefined ? "h-7" : "h-15"} gap-2`}
+            <section className={`flex ${created_at == undefined ? "h-7" : "h-15"} gap-2 hover:cursor-pointer group`}
                 onClick={() => {
                     navigate(`/profile/${author_id}`)
                 }}
             >
                 <div className="h-full aspect-square">
-                    <img className="rounded-full w-full h-full" src={author !== undefined && author.profile_pic_url ? author.profile_pic_url : profilePlaceholder} alt="" />
+                    <img className="rounded-full w-full h-full group-hover:opacity-50 duration-300" src={author !== undefined && author.profile_pic_url ? author.profile_pic_url : profilePlaceholder} alt="" />
                 </div>
                 <div className="flex flex-col">
                     <div className="my-auto text-1xl">
-                        <p className="font-bold">{author !== undefined ? (author.display_name ? author.display_name : author.username) : "John Doe"}</p>
+                        <p className="font-bold group-hover:opacity-50 duration-300">{author !== undefined ? (author.display_name ? author.display_name : author.username) : "John Doe"}</p>
                         <p className="opacity-50">{created_at !== undefined ? new Date(created_at).toLocaleString() : ""}</p>
                     </div>
                 </div>

@@ -54,7 +54,7 @@ const Profile = () => {
     const [blogs, setBlogs] = useState<BlogType[] | null>(null);
     const [postTags, setPostTags] = useState<PostTagType[]>([]);
     const [tags, setTags] = useState<TagType[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    // const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetch = async () => {
@@ -101,7 +101,7 @@ const Profile = () => {
 
     console.log(userInfo)
     return (
-        <main className="m-auto">
+        <main className="m-auto min-h-screen">
             <section className=" bg-violet-200">
                 <div className="pt-15 pb-30 w-6/7 lg:w-1/2 m-auto">
                     <div className="flex flex-col  lg:flex-row justify-center gap-10 h-full">

@@ -1,7 +1,11 @@
+
+
 let csrfToken = "";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const fetchCsrfToken = async () => {
-    const response = await fetch("http://localhost:4000/api/csrf-token", {
+const response = await fetch(`${API_URL}/api/csrf-token`, {
         credentials: "include",
     });
 
@@ -22,7 +26,7 @@ export const login = async ({ username, password }: LoginProps) => {
             await fetchCsrfToken();
         }
         console.log(csrfToken);
-        const URL = "http://localhost:4000/api/login";
+        const URL = `${API_URL}/api/login`;
         const response = await fetch(URL, {
             method: "POST",
             credentials: "include",
@@ -64,7 +68,7 @@ export const register = async ({
         if (!csrfToken) {
             await fetchCsrfToken();
         }
-        const URL = "http://localhost:4000/api/register";
+        const URL = `${API_URL}/api/register`;
         const response = await fetch(URL, {
             method: "POST",
             credentials: "include",
@@ -92,7 +96,7 @@ export const register = async ({
 };
 
 export const fetchTags = async () => {
-    const URL = "http://localhost:4000/api/get-tags";
+    const URL = `${API_URL}/api/get-tags`;
     try {
         const response = await fetch(URL);
         const data = await response.json();
@@ -106,7 +110,7 @@ export const fetchTags = async () => {
 
 export const fetchUserInfo = async (userId: number) => {
     try {
-        const URL = `http://localhost:4000/api/fetch-user-info?userId=${userId}`;
+        const URL = `${API_URL}/api/fetch-user-info?userId=${userId}`;
 
         if (!userId) throw new Error("No userId");
         const response = await fetch(URL);
@@ -129,7 +133,7 @@ export const sendMail = async ({ name, email, message }: sendMailProps) => {
         if (!csrfToken) {
             await fetchCsrfToken();
         }
-        const URL = "http://localhost:4000/api/send-mail";
+        const URL = `${API_URL}/api/send-mail`;
         const response = await fetch(URL, {
             method: "POST",
             credentials: "include",
@@ -157,7 +161,7 @@ export const handleCreateBlog = async (formData: FormData) => {
         if (!csrfToken) {
             await fetchCsrfToken();
         }
-        const URL = "http://localhost:4000/api/admin/create-blog";
+        const URL = `${API_URL}/api/admin/create-blog`;
 
         const response = await fetch(URL, {
             method: "POST",
@@ -177,9 +181,9 @@ export const handleCreateBlog = async (formData: FormData) => {
     }
 };
 
-export const getBlogs = async (page: number = 0, fetchAmount: number = 10) => {
+export const getBlogs = async (page: number = 1, fetchAmount: number = 10) => {
     try {
-        const URL = `http://localhost:4000/api/get-blogs?page=${page}&fetchAmount=${fetchAmount}`;
+        const URL = `${API_URL}/api/get-blogs?page=${page}&fetchAmount=${fetchAmount}`;
         const response = await fetch(URL);
 
         const data = await response.json();
@@ -196,7 +200,7 @@ export const getBlogs = async (page: number = 0, fetchAmount: number = 10) => {
 
 export const getPostTags = async () => {
     try {
-        const URL = "http://localhost:4000/api/get-post-tags";
+        const URL = `${API_URL}/api/get-post-tags`;
         const response = await fetch(URL);
 
         const data = await response.json();
@@ -213,7 +217,7 @@ export const getPostTags = async () => {
 
 export const updateProfile = async (formData: FormData) => {
     try {
-        const URL = "http://localhost:4000/api/update-profile";
+        const URL = `${API_URL}/api/update-profile`;
         const response = await fetch(URL, {
             method: "POST",
             headers: {
@@ -231,7 +235,7 @@ export const updateProfile = async (formData: FormData) => {
 
 export const signOut = async () => {
     try {
-        const URL = "http://localhost:4000/api/sign-out";
+        const URL = `${API_URL}/api/sign-out`;
         const response = await fetch(URL, {
             method: "POST",
             credentials: "include",

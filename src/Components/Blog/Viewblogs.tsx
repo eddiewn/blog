@@ -26,13 +26,13 @@ function ViewBlogs() {
     const [postTags, setPostTags] = useState<PostTagType[]>([]);
     const [tags, setTags] = useState<TagType[]>([]);
 
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
 
 
     useEffect(() => {
         const fetch = async () => {
             try {
-                const data = await getBlogs(page * 10, 10);
+                const data = await getBlogs(page, 6);
 
                 setBlogs(data.blogs);
             } catch (error) {
@@ -73,8 +73,8 @@ function ViewBlogs() {
     if (!blogs) return;
 
     return (
-        <main>
-            <h1 className="text-3xl m-auto w-fit">All Blog Posts</h1>
+        <main className="min-h-[90vh] w-full md:w-4/5 md:m-auto lg:w-3/5 mt-20">
+            <h1 className="text-3xl m-auto w-fit my-10">All Blog Posts</h1>
             <section className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10 lg:gap-2">
                 {blogs.map((blog) => {
                     // console.log("Blog ID " + blog.id);

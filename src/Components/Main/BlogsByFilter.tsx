@@ -13,7 +13,7 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const data = await getBlogs(0, 6);
+                const data = await getBlogs(1, 6);
 
                 setBlogs(data.blogs);
             } catch (error) {
@@ -99,7 +99,7 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
                     navigate("/view-blogs");
                 }}
             >
-                View Latest Posts
+                View All Posts
             </button>
         </>
     );

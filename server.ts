@@ -33,6 +33,8 @@ const resendKey = process.env.RESEND_API;
 
 const secret = process.env.SECRET;
 
+
+
 const s3 = new S3Client({
     region: "auto",
     endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
@@ -87,6 +89,9 @@ app.use(
 
 const PgSession = connectPgSimple(session);
 
+
+const isProduction = process.env.NODE_ENV === "production";
+
 app.use(
     session({
         store: new PgSession({
@@ -100,7 +105,7 @@ app.use(
 
         cookie: {
             //ONly for temporary HTTP site
-            secure: false,
+            secure: isProduction,
             maxAge: 1000 * 60 * 60 * 24 * 7,
             sameSite: "lax",
         },
@@ -116,7 +121,7 @@ const { invalidCsrfTokenError, generateCsrfToken, doubleCsrfProtection } =
         cookieName: "csrf-token",
         cookieOptions: {
             httpOnly: false,
-            secure: false,
+            secure: isProduction,
             sameSite: "lax",
         },
         size: 64,
@@ -511,14 +516,14 @@ app.get("/api/fetch-user-info", async (req, res) => {
 
 app.get("/api/get-blogs", async (req, res) => {
     try {
-        const page = Number(req.query.page);
         const fetchAmount = Number(req.query.fetchAmount);
+        const offset = (Number(req.query.page) - 1) * fetchAmount;
 
-        console.log(page)
+        console.log(offset)
         console.log(fetchAmount)
 
         const query = `SELECT * FROM posts ORDER BY created_at DESC LIMIT $1 OFFSET $2`;
-        const values = [fetchAmount, page]
+        const values = [fetchAmount, offset]
         const result = await pool.query(query, values);
 
         const blogs = result.rows;
