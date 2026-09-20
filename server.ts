@@ -76,6 +76,7 @@ const pool = new Pool({
 
 const app = express();
 const PORT = 4000;
+app.set("trust proxy", 1);
 
 app.use(
     cors({
@@ -100,7 +101,7 @@ app.use(
         cookie: {
             //ONly for temporary HTTP site
             secure: false,
-            maxAge: 1000 * 60 * 60,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
             sameSite: "lax",
         },
     }),
@@ -161,7 +162,6 @@ app.use(
     },
 );
 
-app.set("trust proxy", 1);
 
 app.get("/api/admin/enter-blog", (req, res) => {
     res.json({ auth: true });
@@ -511,8 +511,15 @@ app.get("/api/fetch-user-info", async (req, res) => {
 
 app.get("/api/get-blogs", async (req, res) => {
     try {
-        const query = `SELECT * FROM posts`;
-        const result = await pool.query(query);
+        const page = Number(req.query.page);
+        const fetchAmount = Number(req.query.fetchAmount);
+
+        console.log(page)
+        console.log(fetchAmount)
+
+        const query = `SELECT * FROM posts ORDER BY created_at DESC LIMIT $1 OFFSET $2`;
+        const values = [fetchAmount, page]
+        const result = await pool.query(query, values);
 
         const blogs = result.rows;
 

@@ -16,6 +16,8 @@ const Login = () => {
         try {
             const data = await login({username, password});
 
+            console.log(data)
+
             if(data.valid){
                 setUser(data.user);
                 navigate("/")

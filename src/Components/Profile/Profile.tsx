@@ -110,9 +110,9 @@ const Profile = () => {
                             src={userInfo.profile_pic_url ? userInfo.profile_pic_url : blogPostProfilePlaceholder}
                             alt=""
                         />
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-3/5">
                             <h1 className="text-3xl font-bold">{`${userInfo.display_name ? userInfo.display_name : userInfo.username}`}</h1>
-                            <p className="opacity-65 break-all">{`${userInfo.bio ? userInfo.bio : "They dont say much about themself... but we are sure they are a great person."}`}</p>
+                            <p className="opacity-65">{`${userInfo.bio ? userInfo.bio : "They dont say much about themself... but we are sure they are a great person."}`}</p>
                         </div>
                     </div>
                 </div>

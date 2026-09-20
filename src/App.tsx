@@ -6,7 +6,7 @@ import About from "./Components/About/About";
 import Contact from "./Components/Contact/Contact";
 import Auth from "./Components/AuthForms/Auth";
 import Createblog from "./Components/Blog/Createblog";
-import Viewblogs from "./Components/Blog/Viewblogs";
+import ViewBlogs from "./Components/Blog/Viewblogs";
 import Post from "./Components/Blog/Post";
 import Settings from "./Components/Settings/Settings";
 
@@ -31,7 +31,7 @@ function App() {
                         <Route path="/about" element={<About />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/create-blog" element={<Createblog />} />
-                        <Route path="/view-blogs" element={<Viewblogs />} />
+                        <Route path="/view-blogs" element={<ViewBlogs />} />
                         <Route path="/posts/*" element={<Post />} />
                         <Route path="/profile/:id" element={<Profile />} />
                         <Route path="/settings" element={<Settings />} />

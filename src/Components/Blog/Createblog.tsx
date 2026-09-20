@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown";
 import UserContext from "../../context/UserContext";
 import AuthorCard from "./AuthorCard";
-import { fetchTags } from "../../api/api";
+import { fetchTags, handleCreateBlog } from "../../api/api";
 
 import placeHolderBlogImg from "../../Assets/images/blogPostImagePlaceholder.jpg";
 
@@ -110,11 +110,8 @@ const Createblog = () => {
     const handleRemoveTag = (addedTag: string) => {
         setAddedTags((prev) => prev.filter((tag) => tag !== addedTag));
     };
-
-    const handleCreateBlog = async () => {
-        console.log(addedTags);
-        try {
-            const URL = "http://localhost:4000/api/admin/create-blog";
+    const createBlog = async() => {
+            if (!user) return;
 
             const formData = new FormData();
             formData.append("title", state.title);
@@ -122,7 +119,6 @@ const Createblog = () => {
             formData.append("content", state.main);
             formData.append("tags", JSON.stringify(addedTags));
 
-            if (!user) return;
 
             formData.append("author_id", String(user.id));
             if (state.cover_image) {
@@ -143,20 +139,10 @@ const Createblog = () => {
                 return alert("You are missing cover image");
             }
 
-            const response = await fetch(URL, {
-                method: "POST",
-                credentials: "include",
-                body: formData,
-            });
+            handleCreateBlog(formData)
+    }
 
-            const data = await response.json();
-            if (!response.ok) throw data.error;
 
-            console.log(data.message);
-        } catch (error) {
-            console.log("Error creating blog:", error);
-        }
-    };
 
     if (auth === null) return <p>Loading...</p>;
     if (!auth) return null;
@@ -293,7 +279,7 @@ const Createblog = () => {
                     <button
                         className="w-full rounded-lg bg-violet-300 px-6 py-3 font-semibold text-zinc-900 hover:bg-violet-200 active:scale-[0.99] transition"
                         onClick={() => {
-                            handleCreateBlog();
+                            createBlog();
                         }}
                     >
                         Create Blog

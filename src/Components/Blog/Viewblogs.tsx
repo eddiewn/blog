@@ -2,13 +2,14 @@ import { getBlogs, getPostTags, fetchTags } from "../../api/api";
 import { useEffect, useState } from "react";
 import BlogPreviewCard from "./BlogPreviewCard";
 
-function BlogsByFilter(){
+function ViewBlogs() {
     type BlogType = {
         id: number;
         title: string;
         summary: string;
         cover_image_url: string;
         tags: string[];
+        author_id: number;
     };
 
     type PostTagType = {
@@ -25,10 +26,13 @@ function BlogsByFilter(){
     const [postTags, setPostTags] = useState<PostTagType[]>([]);
     const [tags, setTags] = useState<TagType[]>([]);
 
+    const [page, setPage] = useState(0);
+
+
     useEffect(() => {
         const fetch = async () => {
             try {
-                const data = await getBlogs();
+                const data = await getBlogs(page * 10, 10);
 
                 setBlogs(data.blogs);
             } catch (error) {
@@ -36,7 +40,7 @@ function BlogsByFilter(){
             }
         };
         fetch();
-    }, []);
+    }, [page]);
 
     useEffect(() => {
         const fetch = async () => {
@@ -70,8 +74,8 @@ function BlogsByFilter(){
 
     return (
         <main>
-        <h1 className="text-3xl m-auto w-fit">All Blog Posts</h1>
-            <section className="grid grid-cols-1 gap-10 m-5">
+            <h1 className="text-3xl m-auto w-fit">All Blog Posts</h1>
+            <section className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10 lg:gap-2">
                 {blogs.map((blog) => {
                     // console.log("Blog ID " + blog.id);
                     // console.log("Selected Tag ID " + selectedTagId);
@@ -86,35 +90,33 @@ function BlogsByFilter(){
                         })
                         .filter((name): name is string => name !== undefined);
 
-                    console.log(tagNames)
+                    console.log(tagNames);
 
-                        return (
-                            <>
-                                <div className="m-auto w-4/5 h-px bg-black opacity-30"></div>
-                                <BlogPreviewCard
-                                    id={blog.id}
-                                    title={blog.title}
-                                    summary={blog.summary}
-                                    cover_image_url={blog.cover_image_url}
-                                    tags={tagNames}
-                                    author_id={undefined}
-
-                                />
-                            </>
-                        );
+                    return (
+                        <>
+                            <BlogPreviewCard
+                                id={blog.id}
+                                title={blog.title}
+                                summary={blog.summary}
+                                cover_image_url={blog.cover_image_url}
+                                tags={tagNames}
+                                author_id={blog.author_id}
+                            />
+                        </>
+                    );
                 })}
-
-            {/* <button
-                className="bg-blue-400 hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors duration-200 w-fit"
-                onClick={() => {
-                    navigate("/view-blogs");
-                }}
-            >
-                View Latest Posts
-            </button> */}
             </section>
+            <div className="flex justify-center gap-5">
+                <button onClick={() => {
+                    setPage(page => page - 1)
+                }}>Previous</button>
+                <button onClick={() => {
+                    setPage(page => page + 1)
+
+                }}>Next</button>
+            </div>
         </main>
     );
 }
 
-export default BlogsByFilter;
+export default ViewBlogs;

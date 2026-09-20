@@ -50,7 +50,7 @@ const BlogPreviewCard = ({
                 <div className="">
                     <div className="overflow-hidden rounded-t-xl">
                         <img
-                            className="group-hover:scale-105 transition-transofmr duration-200 h-70 m-auto self-start w-full object-cover "
+                            className="group-hover:scale-105 transition-transform duration-200 h-70 m-auto self-start w-full object-cover "
                             src={cover_image_url}
                             alt=""
                         />

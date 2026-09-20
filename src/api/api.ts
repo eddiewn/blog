@@ -44,6 +44,7 @@ export const login = async ({ username, password }: LoginProps) => {
             return data;
         }
     } catch (error) {
+        console.log(error);
         console.log("Error logging in");
     }
 };
@@ -151,9 +152,34 @@ export const sendMail = async ({ name, email, message }: sendMailProps) => {
     }
 };
 
-export const getBlogs = async () => {
+export const handleCreateBlog = async (formData: FormData) => {
     try {
-        const URL = "http://localhost:4000/api/get-blogs";
+        if (!csrfToken) {
+            await fetchCsrfToken();
+        }
+        const URL = "http://localhost:4000/api/admin/create-blog";
+
+        const response = await fetch(URL, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "x-csrf-token": csrfToken,
+            },
+            body: formData,
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw data.error;
+
+        console.log(data.message);
+    } catch (error) {
+        console.log("Error creating blog:", error);
+    }
+};
+
+export const getBlogs = async (page: number = 0, fetchAmount: number = 10) => {
+    try {
+        const URL = `http://localhost:4000/api/get-blogs?page=${page}&fetchAmount=${fetchAmount}`;
         const response = await fetch(URL);
 
         const data = await response.json();

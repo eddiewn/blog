@@ -13,7 +13,7 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const data = await getBlogs();
+                const data = await getBlogs(0, 6);
 
                 setBlogs(data.blogs);
             } catch (error) {
@@ -78,7 +78,7 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
 
     return (
         <>
-            <section className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10 lg:gap-2">
+            <section className="min-h-175 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10 lg:gap-2">
                 {blogs &&
                     renderBlogs(
                         blogs,
