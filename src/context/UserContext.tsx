@@ -1,4 +1,5 @@
 import {createContext, useState, useEffect, type ReactNode} from "react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 type User = {
@@ -25,7 +26,7 @@ export const UserProvider = ({children}: {children: ReactNode}) => {
     useEffect(() => {
         const getUser = async () => {
             try {
-                const URL = "http://localhost:4000/api/me";
+                const URL = `${API_URL}/api/me`;
                 const response = await fetch(URL, {
                     credentials: "include",
                 });
