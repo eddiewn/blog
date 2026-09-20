@@ -52,9 +52,12 @@ const Createblog = () => {
         cover_image: null,
     });
 
+
+    const API_URL = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         const adminAuth = async () => {
-            const URL = "http://localhost:4000/api/admin/enter-blog";
+            const URL = `${API_URL}/api/admin/enter-blog`;
             try {
                 const response = await fetch(URL, {
                     credentials: "include",
