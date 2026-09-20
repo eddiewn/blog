@@ -24,10 +24,13 @@ const Post = () => {
         return parameters.get("id")
     }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
     const getPost = async() => {
         try {
             console.log(getId())
-            const URL = `http://localhost:4000/posts?id=${getId()}`
+            const URL = `${API_URL}/posts?id=${getId()}`
             const response = await fetch(URL)
 
             const data = await response.json();
