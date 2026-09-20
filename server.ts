@@ -107,7 +107,7 @@ app.use(
             //ONly for temporary HTTP site
             secure: isProduction,
             maxAge: 1000 * 60 * 60 * 24 * 7,
-            sameSite: "lax",
+            sameSite: "none",
         },
     }),
 );
@@ -122,7 +122,7 @@ const { invalidCsrfTokenError, generateCsrfToken, doubleCsrfProtection } =
         cookieOptions: {
             httpOnly: false,
             secure: isProduction,
-            sameSite: "lax",
+            sameSite: "none",
         },
         size: 64,
         ignoredMethods: ["GET", "HEAD", "OPTIONS"],
