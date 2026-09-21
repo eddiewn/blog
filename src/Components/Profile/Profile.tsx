@@ -59,7 +59,7 @@ const Profile = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const data = await getBlogs();
+                const data = await getBlogs(1, 1000);
 
                 setBlogs(data.blogs);
             } catch (error) {

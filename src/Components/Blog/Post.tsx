@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import ReactMarkdown from "react-markdown"
+import { fetchPost } from "../../api/api";
 
 import AuthorCard from "./AuthorCard"
 
@@ -24,20 +25,19 @@ const Post = () => {
         return parameters.get("id")
     }
 
-const API_URL = import.meta.env.VITE_API_URL;
 
 
     const getPost = async() => {
         try {
-            console.log(getId())
-            const URL = `${API_URL}/posts?id=${getId()}`
-            const response = await fetch(URL)
+            const id = getId();
+            if(!id){
+                throw ("Error fetching post");
+            }
+                const data = await fetchPost(Number(id))
+                setBlog(data)
 
-            const data = await response.json();
-            setBlog(data)
-            console.log(data)
         } catch (error) {
-            console.log(error)
+            console.log("Error fetching post")
         }
     }
 

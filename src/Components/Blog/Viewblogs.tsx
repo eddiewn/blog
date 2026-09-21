@@ -27,7 +27,7 @@ function ViewBlogs() {
     const [tags, setTags] = useState<TagType[]>([]);
 
     const [page, setPage] = useState(1);
-
+    const [blogAmount, setBlogAmount] = useState<number>(0);
 
     useEffect(() => {
         const fetch = async () => {
@@ -35,6 +35,9 @@ function ViewBlogs() {
                 const data = await getBlogs(page, 6);
 
                 setBlogs(data.blogs);
+                setBlogAmount(data.totalBlogs);
+                console.log(data.totalBlogs)
+
             } catch (error) {
                 console.log(error);
             }
@@ -107,9 +110,16 @@ function ViewBlogs() {
                 })}
             </section>
             <div className="flex justify-center gap-5">
-                <button onClick={() => {
+                <button 
+                    disabled={page === 1}
+                onClick={() => {
                     setPage(page => page - 1)
                 }}>Previous</button>
+
+                <span>
+                    Page {page} of {Math.ceil(blogAmount / 6)}
+                </span>
+
                 <button onClick={() => {
                     setPage(page => page + 1)
 

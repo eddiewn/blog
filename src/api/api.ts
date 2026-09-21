@@ -1,11 +1,9 @@
-
-
 let csrfToken = "";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const fetchCsrfToken = async () => {
-const response = await fetch(`${API_URL}/api/csrf-token`, {
+    const response = await fetch(`${API_URL}/api/csrf-token`, {
         credentials: "include",
     });
 
@@ -92,6 +90,18 @@ export const register = async ({
         }
     } catch (error) {
         console.log("Error registering");
+    }
+};
+
+export const fetchPost = async (id: number) => {
+    try {
+        const URL = `${API_URL}/posts?id=${id}`;
+        const response = await fetch(URL);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
     }
 };
 

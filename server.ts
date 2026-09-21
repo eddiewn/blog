@@ -82,7 +82,7 @@ app.set("trust proxy", 1);
 
 app.use(
     cors({
-        origin: "https://blog.eddiewiiknilsson.com",
+        origin: process.env.CORS_ORIGIN,
         credentials: true,
     }),
 );
@@ -537,6 +537,12 @@ app.get("/api/get-blogs", async (req, res) => {
         console.log(offset)
         console.log(fetchAmount)
 
+        const postsTotal = await pool.query(
+            `SELECT COUNT(*) FROM posts`
+        );
+
+        const totalBlogs = Number(postsTotal.rows[0].count);
+
         const query = `SELECT * FROM posts ORDER BY created_at DESC LIMIT $1 OFFSET $2`;
         const values = [fetchAmount, offset]
         const result = await pool.query(query, values);
@@ -556,6 +562,7 @@ app.get("/api/get-blogs", async (req, res) => {
 
         res.json({
             blogs,
+            totalBlogs
         });
     } catch (error) {
         console.error(error);
