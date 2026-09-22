@@ -36,8 +36,7 @@ function ViewBlogs() {
 
                 setBlogs(data.blogs);
                 setBlogAmount(data.totalBlogs);
-                console.log(data.totalBlogs)
-
+                console.log(data.totalBlogs);
             } catch (error) {
                 console.log(error);
             }
@@ -76,7 +75,7 @@ function ViewBlogs() {
     if (!blogs) return;
 
     return (
-        <main className="min-h-[90vh] w-full md:w-4/5 md:m-auto lg:w-3/5 mt-20">
+        <main className="min-h-[90vh] w-full md:w-4/5 md:m-auto lg:w-3/5 mt-20 pb-10">
             <h1 className="text-3xl m-auto w-fit my-10">All Blog Posts</h1>
             <section className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-10 lg:gap-2">
                 {blogs.map((blog) => {
@@ -109,21 +108,34 @@ function ViewBlogs() {
                     );
                 })}
             </section>
-            <div className="flex justify-center gap-5">
-                <button 
+            <div className="flex items-center justify-center gap-5 mt-8">
+                <button
                     disabled={page === 1}
-                onClick={() => {
-                    setPage(page => page - 1)
-                }}>Previous</button>
+                    onClick={() => {
+                        setPage((page) => page - 1);
+                    }}
+                    className="bg-violet-400 text-white  px-4 py-2 rounded-md
+                   hover:bg-violet-800 transition-colors
+                   disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                    Previous
+                </button>
 
-                <span>
+                <span className="">
                     Page {page} of {Math.ceil(blogAmount / 6)}
                 </span>
 
-                <button onClick={() => {
-                    setPage(page => page + 1)
-
-                }}>Next</button>
+                <button
+                    disabled={page >= Math.ceil(blogAmount / 6)}
+                    onClick={() => {
+                        setPage((page) => page + 1);
+                    }}
+                    className="bg-violet-400 text-white px-4 py-2 rounded-md
+                   hover:bg-violet-800 transition-colors
+                   disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                    Next
+                </button>
             </div>
         </main>
     );
