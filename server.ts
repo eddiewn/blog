@@ -33,8 +33,6 @@ const resendKey = process.env.RESEND_API;
 
 const secret = process.env.SECRET;
 
-
-
 const s3 = new S3Client({
     region: "auto",
     endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
@@ -58,7 +56,7 @@ const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 2 * 1024 * 1024, // 2 MB
+        fileSize: 1 * 512 * 1024, // 512 kb
     },
 });
 
@@ -89,7 +87,6 @@ app.use(
 
 const PgSession = connectPgSimple(session);
 
-
 const isProduction = process.env.NODE_ENV === "production";
 
 app.use(
@@ -107,7 +104,7 @@ app.use(
             //ONly for temporary HTTP site
             secure: isProduction,
             maxAge: 1000 * 60 * 60 * 24 * 7,
-            sameSite: "none",
+            sameSite: isProduction ? "none" : "lax",
         },
     }),
 );
@@ -122,7 +119,7 @@ const { invalidCsrfTokenError, generateCsrfToken, doubleCsrfProtection } =
         cookieOptions: {
             httpOnly: false,
             secure: isProduction,
-            sameSite: "none",
+            sameSite: isProduction ? "none" : "lax",
         },
         size: 64,
         ignoredMethods: ["GET", "HEAD", "OPTIONS"],
@@ -166,7 +163,6 @@ app.use(
         next(error);
     },
 );
-
 
 app.get("/api/admin/enter-blog", (req, res) => {
     res.json({ auth: true });
@@ -301,6 +297,21 @@ app.post("/api/login", loginLimiter, async (req, res) => {
     }
 });
 
+app.delete("/api/delete-post", async (req, res) => {
+    try {
+        if (!req.session.user) return;
+        if (req.session.user.role !== "admin") return;
+
+        const deleteId = req.query.id;
+        const query = "DELETE FROM posts WHERE id = $1";
+        const value = [deleteId];
+        await pool.query(query, value);
+    } catch (error) {
+        console.error("Error deleting post: ", error);
+        res.send("Internal server error");
+    }
+});
+
 const createBlogLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 10,
@@ -400,7 +411,7 @@ app.post(
 const requireLogin = (
     req: express.Request,
     res: express.Response,
-    next: express.NextFunction
+    next: express.NextFunction,
 ) => {
     if (!req.session.user) {
         return res.status(401).json({
@@ -534,17 +545,15 @@ app.get("/api/get-blogs", async (req, res) => {
         const fetchAmount = Number(req.query.fetchAmount);
         const offset = (Number(req.query.page) - 1) * fetchAmount;
 
-        console.log(offset)
-        console.log(fetchAmount)
+        console.log(offset);
+        console.log(fetchAmount);
 
-        const postsTotal = await pool.query(
-            `SELECT COUNT(*) FROM posts`
-        );
+        const postsTotal = await pool.query(`SELECT COUNT(*) FROM posts`);
 
         const totalBlogs = Number(postsTotal.rows[0].count);
 
         const query = `SELECT * FROM posts ORDER BY created_at DESC LIMIT $1 OFFSET $2`;
-        const values = [fetchAmount, offset]
+        const values = [fetchAmount, offset];
         const result = await pool.query(query, values);
 
         const blogs = result.rows;
@@ -562,7 +571,7 @@ app.get("/api/get-blogs", async (req, res) => {
 
         res.json({
             blogs,
-            totalBlogs
+            totalBlogs,
         });
     } catch (error) {
         console.error(error);

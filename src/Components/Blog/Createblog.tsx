@@ -4,6 +4,8 @@ import ReactMarkdown from "react-markdown";
 import UserContext from "../../context/UserContext";
 import AuthorCard from "./AuthorCard";
 import { fetchTags, handleCreateBlog } from "../../api/api";
+import confetti from "canvas-confetti";
+import { adminAuth } from "../../api/api";
 
 import placeHolderBlogImg from "../../Assets/images/blogPostImagePlaceholder.jpg";
 
@@ -43,6 +45,8 @@ const Createblog = () => {
     const [tags, setTags] = useState<string[]>([""]);
     const [addedTags, setAddedTags] = useState<string[]>([]);
 
+    const [disabled, setDisabled] = useState(false);
+
     const navigate = useNavigate();
 
     const [state, dispatch] = useReducer(reducer, {
@@ -52,32 +56,18 @@ const Createblog = () => {
         cover_image: null,
     });
 
-
-    const API_URL = import.meta.env.VITE_API_URL;
-
     useEffect(() => {
-        const adminAuth = async () => {
-            const URL = `${API_URL}/api/admin/enter-blog`;
+        const auth = async () => {
             try {
-                const response = await fetch(URL, {
-                    credentials: "include",
-                });
-                const data = await response.json();
-
-                if (!response.ok || data.auth == false) {
-                    setAuth(false);
+                const authData = await adminAuth();
+                if (!authData) {
+                    setAuth(false)                
                     navigate("/");
-                    return;
                 }
                 setAuth(true);
-            } catch (error) {
-                console.log(error);
-                setAuth(false);
-                navigate("/");
-            }
+            } catch (error) {}
         };
-
-        adminAuth();
+        auth();
     }, [navigate]);
 
     useEffect(() => {
@@ -113,39 +103,51 @@ const Createblog = () => {
     const handleRemoveTag = (addedTag: string) => {
         setAddedTags((prev) => prev.filter((tag) => tag !== addedTag));
     };
-    const createBlog = async() => {
-            if (!user) return;
+    const createBlog = async () => {
+        setDisabled(true);
 
-            const formData = new FormData();
-            formData.append("title", state.title);
-            formData.append("summary", state.summary);
-            formData.append("content", state.main);
-            formData.append("tags", JSON.stringify(addedTags));
+        if (!user) return false;
 
+        const formData = new FormData();
+        formData.append("title", state.title);
+        formData.append("summary", state.summary);
+        formData.append("content", state.main);
+        formData.append("tags", JSON.stringify(addedTags));
 
-            formData.append("author_id", String(user.id));
-            if (state.cover_image) {
-                formData.append("cover_image", state.cover_image);
+        formData.append("author_id", String(user.id));
+        if (state.cover_image) {
+            formData.append("cover_image", state.cover_image);
+        }
+
+        for (const [key, value] of formData.entries()) {
+            if (typeof value === "string" && value.trim() === "") {
+                alert(`You are missing ${key}`);
+                setDisabled(false);
+                return false;
             }
+        }
 
-            for (const [key, value] of formData.entries()) {
-                if (typeof value === "string" && value.trim() === "") {
-                    return alert(`You are missing ${key}`);
-                }
-            }
+        if (addedTags.length === 0) {
+            alert("You are missing tags");
+            setDisabled(false);
+            return false;
+        }
 
-            if (addedTags.length === 0) {
-                return alert("You are missing tags");
-            }
+        if (!state.cover_image) {
+            alert("You are missing cover image");
+            setDisabled(false);
+            return false;
+        }
 
-            if (!state.cover_image) {
-                return alert("You are missing cover image");
-            }
-
-            handleCreateBlog(formData)
-    }
-
-
+        try {
+            await handleCreateBlog(formData);
+            return true;
+        } catch (error) {
+            console.error(error);
+            setDisabled(false);
+            alert("Error creating blog");
+        }
+    };
 
     if (auth === null) return <p>Loading...</p>;
     if (!auth) return null;
@@ -217,7 +219,7 @@ const Createblog = () => {
                                         e.target.value = "";
                                         return alert("Only images");
                                     }
-                                    if (file.size > 2 * 1024 * 1024) {
+                                    if (file.size > 1 * 512 * 1024) {
                                         e.target.value = "";
                                         console.log("File size:", file.size);
                                         return alert("File is too large");
@@ -280,9 +282,23 @@ const Createblog = () => {
                     </section>
 
                     <button
+                        id="hs-run-on-click-run-confetti"
                         className="w-full rounded-lg bg-violet-300 px-6 py-3 font-semibold text-zinc-900 hover:bg-violet-200 active:scale-[0.99] transition"
-                        onClick={() => {
-                            createBlog();
+                        disabled={disabled}
+                        onClick={async () => {
+                            const valid = await createBlog();
+                            if (!valid) return;
+                            confetti({
+                                particleCount: 100,
+                                spread: 70,
+                                origin: {
+                                    y: 0.6,
+                                },
+                            });
+
+                            setTimeout(() => {
+                                navigate("/");
+                            }, 1000);
                         }}
                     >
                         Create Blog

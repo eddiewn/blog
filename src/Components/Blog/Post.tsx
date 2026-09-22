@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"
-import { fetchPost } from "../../api/api";
+import { deletePost, fetchPost, adminAuth } from "../../api/api";
 
 import AuthorCard from "./AuthorCard"
 
 const Post = () => {
+
+    const navigate = useNavigate();
 
     type BlogType = {
         title: string,
@@ -18,6 +21,7 @@ const Post = () => {
     
 
     const [blog, setBlog] = useState<BlogType | null>()
+    const [auth, setAuth] = useState<boolean>(false);
     console.log(blog)
 
     const getId = () => {
@@ -25,7 +29,7 @@ const Post = () => {
         return parameters.get("id")
     }
 
-
+    
 
     const getPost = async() => {
         try {
@@ -41,8 +45,19 @@ const Post = () => {
         }
     }
 
+        const authyes = async () => {
+            try {
+                const authData = await adminAuth();
+                if (!authData) {
+                    setAuth(false)                
+                }
+                setAuth(true);
+            } catch (error) {}
+        };
+
     useEffect(() => {
         getPost();
+        authyes();
     },[])
 
     if(blog === null) return (<>No blogpost</>)
@@ -109,6 +124,13 @@ const Post = () => {
                     </section>
                 </div>
             </div>
+            {auth && (
+                <button onClick={() => {
+                    confirm("Are you sure you want to delete this post?")
+                    deletePost(Number(getId()))
+                    navigate("/")
+                }}>Delete button</button>
+                )}
             </main>
         </>
     )
