@@ -125,12 +125,14 @@ const Post = () => {
                 </div>
             </div>
             {auth && (
-                <button onClick={() => {
+                <button 
+                className="p-5 bg-red-500 flex w-fit m-auto rounded-xl font-bold text-white hover:opacity-50 c cursor-pointer"
+                onClick={() => {
                     if(confirm("Are you sure you want to delete this post?")){
                         deletePost(Number(getId()))
                         navigate("/")
                     }
-                }}>Delete button</button>
+                }}>Delete Post</button>
                 )}
             </main>
         </>
