@@ -126,9 +126,10 @@ const Post = () => {
             </div>
             {auth && (
                 <button onClick={() => {
-                    confirm("Are you sure you want to delete this post?")
-                    deletePost(Number(getId()))
-                    navigate("/")
+                    if(confirm("Are you sure you want to delete this post?")){
+                        deletePost(Number(getId()))
+                        navigate("/")
+                    }
                 }}>Delete button</button>
                 )}
             </main>
