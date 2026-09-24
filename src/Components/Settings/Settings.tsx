@@ -103,7 +103,7 @@ const Settings = () => {
                 file:px-4 file:py-2 file:text-sm file:font-medium
                 hover:file:bg-gray-300"
             />
-            <p className="text-xs text-gray-500">PNG or JPEG, max 2 MB.</p>
+            <p className="text-xs text-gray-500">PNG, JPEG, or WEBP, max 0.5 MB.</p>
         </div>
 
         <div className="flex flex-col gap-2">
