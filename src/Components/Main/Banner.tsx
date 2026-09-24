@@ -3,11 +3,11 @@ import arrowDown from "../../Assets/images/arrowDown.png"
 const Banner = () => {
     return (
         <section className={`w-screen h-screen  bg-linear-135 from-blue-700 to-pink-200 text-white`}>
-            <div className="h-[97%] flex flex-col justify-end gap-20 mx-10 md:ml-30">
-                <h1 className="text-7xl font-extrabold text-white">
+            <div className="h-[97%] flex flex-col justify-end gap-10 2xl:gap-20 mx-10 ml-15 md:ml-30">
+                <h1 className="text-5xl 2xl:text-7xl font-extrabold text-white">
                     This is my Blog. Yup, just blog.
                 </h1>
-                <div className="flex flex-col gap-7 text-2xl">
+                <div className="flex flex-col gap-2 lg:gap-7 text-2xl">
                     <p className="">Thoughts worth sharing. </p>
 
                     <p className="lg:w-2/5">
