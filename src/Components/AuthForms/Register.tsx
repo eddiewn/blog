@@ -30,7 +30,7 @@ const Register = () => {
     };
 
     return (
-        <main className="flex flex-col-reverse lg:flex-row-reverse h-screen">
+        <main className="flex flex-col-reverse lg:flex-row-reverse gap-10 lg:gap-0 lg:h-screen">
             <section className="w-3/4 flex flex-col m-auto items-center gap-10">
                 <h1 className="text-1xl font-bold">Sign up</h1>
                 <form
