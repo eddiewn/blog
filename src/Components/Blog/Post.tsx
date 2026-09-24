@@ -48,21 +48,31 @@ const Post = () => {
         const authyes = async () => {
             try {
                 const authData = await adminAuth();
-                if (!authData) {
+                    console.log(authData)
+
+                console.log(authData)
+
+                if (authData === false) {
                     setAuth(false)                
+                }else if(authData === true){
+                    setAuth(true);
+                }else{
+                    console.log("Error")
                 }
-                setAuth(true);
             } catch (error) {}
         };
 
     useEffect(() => {
         getPost();
         authyes();
+
     },[])
 
     if(blog === null) return (<>No blogpost</>)
 
     if(blog === undefined) return
+
+    console.log(auth)
 
     return(
         <>

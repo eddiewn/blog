@@ -297,11 +297,8 @@ app.post("/api/login", loginLimiter, async (req, res) => {
     }
 });
 
-app.delete("/api/delete-post", async (req, res) => {
+app.delete("/api/admin/delete-post", async (req, res) => {
     try {
-        if (!req.session.user) return;
-        if (req.session.user.role !== "admin") return;
-
         const deleteId = req.query.id;
         const query = "DELETE FROM posts WHERE id = $1";
         const value = [deleteId];

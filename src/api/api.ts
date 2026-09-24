@@ -92,25 +92,32 @@ export const register = async ({
         console.log("Error registering");
     }
 };
-export const adminAuth = async() => {
+export const adminAuth = async () => {
+    const URL = `${API_URL}/api/admin/enter-blog`;
+    try {
+        if (!csrfToken) {
+            await fetchCsrfToken();
+        }
 
-            const URL = `${API_URL}/api/admin/enter-blog`;
-            try {
-                const response = await fetch(URL, {
-                    credentials: "include",
-                });
-                const data = await response.json();
+        const response = await fetch(URL, {
+            credentials: "include",
+            headers: {
+                "x-csrf-token": csrfToken,
+            },
+        });
+        const data = await response.json();
 
-                if (!response.ok || data.auth == false) {
-                    return false;
-                }
+        console.log(response)
 
-                return true;             
-            } catch (error) {
-                console.log(error);
-            }
-        
+        if (!response.ok || data.auth == false) {
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.log(error);
     }
+};
 
 export const fetchPost = async (id: number) => {
     try {
@@ -192,7 +199,7 @@ export const handleCreateBlog = async (formData: FormData) => {
         }
         const URL = `${API_URL}/api/admin/create-blog`;
 
-        console.log(csrfToken)
+        console.log(csrfToken);
         const response = await fetch(URL, {
             method: "POST",
             credentials: "include",
@@ -206,7 +213,7 @@ export const handleCreateBlog = async (formData: FormData) => {
         if (!response.ok) throw data.error;
 
         console.log(data.message);
-        return(response.status)
+        return response.status;
     } catch (error) {
         console.log("Error creating blog:", error);
     }
@@ -264,20 +271,20 @@ export const updateProfile = async (formData: FormData) => {
     }
 };
 
-export const deletePost = async(id: number) => {
+export const deletePost = async (id: number) => {
     try {
-        const URL = `${API_URL}/api/delete-post?id=${id}`
+        const URL = `${API_URL}/api/admin/delete-post?id=${id}`;
         const response = await fetch(URL, {
             method: "DELETE",
             credentials: "include",
             headers: {
                 "x-csrf-token": csrfToken,
-            }
-        })
+            },
+        });
     } catch (error) {
-        
+
     }
-}
+};
 
 export const signOut = async () => {
     try {
