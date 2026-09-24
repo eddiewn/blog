@@ -151,7 +151,7 @@ export const fetchUserInfo = async (userId: number) => {
         if (!userId) throw new Error("No userId");
         const response = await fetch(URL);
 
-        const data = response.json();
+        const data = await response.json();
         return data;
     } catch (error) {
         console.log("Error fetching user data");
@@ -255,6 +255,10 @@ export const getPostTags = async () => {
 
 export const updateProfile = async (formData: FormData) => {
     try {
+        if (!csrfToken) {
+            await fetchCsrfToken();
+        }
+        console.log(formData)
         const URL = `${API_URL}/api/update-profile`;
         const response = await fetch(URL, {
             method: "POST",
@@ -264,6 +268,11 @@ export const updateProfile = async (formData: FormData) => {
             credentials: "include",
             body: formData,
         });
+
+        const contentType = response.headers.get("content-type");
+
+        console.log(contentType)
+
         const data = await response.json();
         console.log(data);
     } catch (error) {

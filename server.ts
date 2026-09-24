@@ -425,68 +425,69 @@ app.post(
     upload.single("profileImage"),
     async (req, res) => {
         const user = req.session.user;
-
-        if (!user) {
-            return res.status(401).json({
-                error: "Not logged in",
-            });
-        }
-
-        const { displayName, bio } = req.body;
-        const id = user.id;
-        const image = req.file;
-
-        if (image) {
-            console.log(req.file);
-            console.log(req.file?.path);
-
-            // read the file and return buffer
-            const buffer = image.buffer;
-            // get the file type
-            const type = await fileTypeFromBuffer(buffer);
-            // validate
-            const allowedTypes = ["image/jpeg", "image/png"];
-            if (!type || !allowedTypes.includes(type.mime)) {
-                throw new Error("Invalid file type");
-            }
-        }
-
-        let profile_pic_url = null;
-
-        const randomImageName = (bytes = 16) =>
-            crypto.randomBytes(bytes).toString("hex");
-
-        const imageName = randomImageName();
-
-        if (image) {
-            console.log(image);
-
-            const params = {
-                Bucket: bucketName,
-                Key: imageName,
-                Body: req.file?.buffer,
-                ContentType: req.file?.mimetype,
-            };
-
-            const command = new PutObjectCommand(params);
-
-            await s3.send(command);
-
-            console.log(image);
-            // Get blog URL here
-            const getObjectParams = {
-                Bucket: bucketName,
-                Key: imageName,
-            };
-
-            const command2 = new GetObjectCommand(getObjectParams);
-            const url = await getSignedUrl(s3, command2, { expiresIn: 3600 });
-            profile_pic_url = url;
-        }
-
-        let query;
-        let values;
         try {
+            if (!user) {
+                return res.status(401).json({
+                    error: "Not logged in",
+                });
+            }
+
+            const { displayName, bio } = req.body;
+            const id = user.id;
+            const image = req.file;
+
+            if (image) {
+                console.log(req.file);
+                console.log(req.file?.path);
+
+                // read the file and return buffer
+                const buffer = image.buffer;
+                // get the file type
+                const type = await fileTypeFromBuffer(buffer);
+                // validate
+                const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+                if (!type || !allowedTypes.includes(type.mime)) {
+                    throw new Error("Invalid file type");
+                }
+            }
+
+            let profile_pic_url = null;
+
+            const randomImageName = (bytes = 16) =>
+                crypto.randomBytes(bytes).toString("hex");
+
+            const imageName = randomImageName();
+
+            if (image) {
+                console.log(image);
+
+                const params = {
+                    Bucket: bucketName,
+                    Key: imageName,
+                    Body: req.file?.buffer,
+                    ContentType: req.file?.mimetype,
+                };
+
+                const command = new PutObjectCommand(params);
+
+                await s3.send(command);
+
+                console.log(image);
+                // Get blog URL here
+                const getObjectParams = {
+                    Bucket: bucketName,
+                    Key: imageName,
+                };
+
+                const command2 = new GetObjectCommand(getObjectParams);
+                const url = await getSignedUrl(s3, command2, {
+                    expiresIn: 3600,
+                });
+                profile_pic_url = url;
+            }
+
+            let query;
+            let values;
             if (profile_pic_url) {
                 query = `UPDATE users SET display_name = $1, bio = $2, profile_pic_url = $3, profile_pic = $4 WHERE id = $5`;
                 values = [displayName, bio, profile_pic_url, imageName, id];
