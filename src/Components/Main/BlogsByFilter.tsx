@@ -9,15 +9,19 @@ type BlogsByFilterProps = {
 
 function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetch = async () => {
+            setLoading(true);
             try {
                 const data = await getBlogs(1, 6);
 
                 setBlogs(data.blogs);
             } catch (error) {
                 console.log(error);
+            }finally{
+                setLoading(false)
             }
         };
         fetch();
@@ -73,6 +77,16 @@ function BlogsByFilter({ selectedTagId }: BlogsByFilterProps) {
 
     // console.log(blogs);
     // console.log(postTags);
+
+    if (loading) {
+        return (
+            <div className="min-h-175 flex items-center justify-center">
+                <h1 className="text-4xl font-bold text-black">
+                    SERVER IS STARTING SHOULD TAKE ABOUT 1 MINUTE BEFORE BLOGS LOAD IN...
+                </h1>
+            </div>
+        );
+    }
 
     if (!blogs) return;
 
